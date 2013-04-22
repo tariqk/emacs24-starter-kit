@@ -1,0 +1,89 @@
+#+TITLE: Common Options for Emacs Starter Kit for Tariq Kamal (tariqk)
+#+STARTUP: indent hidestars
+#+OPTIONS: toc:nil num:nil ^:nil
+
+This is part of Tariq Kamal's common emacs configuration, with options that remain true no matter what device he's on.
+
+This is supposed to be used with [[https://github.com/eschulte/emacs24-starter-kit/][The Literate Programming Fork of the Emacs24 Starter Kit]], and called from $hostname.org via the following, somewhere in the top of the file:
+
+#+begin_example 
+(org-babel-load-file "tariqk-common.org")
+#+end_example
+
+* What goes in here
+Basically, things that:
+
+- You use on a regular basis.
+- Stuff you'd like to see replicated on ALL emacs instances you run, no matter what kind of machine.
+
+* The Settings themselves
+Actual settings go here.
+
++ NOTE :: Please remember that this should be common to /all/ emacs versions you run. This means stuff that run on terminals, stuff that runs on windowing systems, like that.
+
+** Interface
+How things appear on your emacs screen.
+
+*** CUA-mode
+So I grew up on Windows systems. 
+
+While I do get /some/ of the terminology (i.e. C-k means cut everything between the cursor to
+EOL and put it into the kill-ring, C-y means paste the last entry from
+the kill-ring onto the document), I use too many Windows tools to allow me to mentally switch gears every time I change machines. So CUA-mode it is.
+
+#+begin_src emacs-lisp
+(cua-mode)
+#+end_src
+
+*** Visual-line-mode
+I can't /stand/ having to muck around with linewraps while I'm writing. It's fucking annoying. So, instead, I shall use visual-line-mode.
+
+Of course, since this annoyance really only comes during writing, and not coding, we shall only put it on in text modes. Sounds fair? Hope so.
+
+#+begin_src emacs-lisp
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+(remove-hook 'text-mode-hook 'turn-on-auto-fill)
+#+end_src
+
+*** The transparent window hack
+This violates the rule for putting things that only matter on all machines, but the calling of this defun should only happen in emacs instances in windowing systems. In the mean-time, since this code is so common across a lot of OSes, might as well define it here.
+
+#+begin_src emacs-lisp
+(defun transparent(alpha-level no-focus-alpha-level)
+"Lets you make the window transparent"
+(interactive "nAlpha level (0-100): \nnNo focus alpha level (0-100): ")
+(set-frame-parameter (selected-frame) 'alpha (list alpha-level no-focus-alpha-level))
+(add-to-list 'default-frame-alist `(alpha ,alpha-level)))
+#+end_src
+
+*** Get rid of the toolbar and menu-bar
+Takes up space only. What a waste, especially on the netbook.
+
+#+begin_src emacs-lisp
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+#+end_src
+
+** Backend Stuff
+How things work in the background.
+
+*** Package Management Locations
+I never knew that org-mode got its own package library. So cool. But what was missing from the whole list was MELPA. Where can liddat, where can?
+
+This does mean that package loads twice. Ehh, should be no problem, right?
+
+#+begin_src emacs-lisp
+(setq package-archives '(
+;; If it isn't obvious, the format is like this:
+;;                       ("archive-name" . "repo URL")
+                         ("ori" . "http://tromey.com/elpa/")
+                         ("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("MELPA" . "http://melpa.milkbox.net/packages/")
+                         ("org" . "http://orgmode.org/elpa/")
+))
+
+(package-initialize) ; reinitialize!
+#+end_src
+* Additional features to add.
+Put anything else to add here, and mark it as to-do. Ho, hey!

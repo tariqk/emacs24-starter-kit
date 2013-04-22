@@ -1,0 +1,52 @@
+#+TITLE: Configuration Specific To Tariq's Asus Eee 1001HA Netbook.
+#+STARTUP: indent hidestars
+#+OPTIONS: toc:nil num:nil ^:nil
+
+So this is basically the configuration file for munchkin, the little Asus Eee 1001HA that currently runs on Linux Wheezy. It's a tiny ickle system, and the only thing smaller than this is the Raspberry Pi that I've got, but that's not running emacs. Yet.
+
+* Before we begin
+Anyway, as with all hostname-specific machines, this little fella runs the following code to load the common features I expect from all my emacs instances:
+
+#+begin_src emacs-lisp
+(org-babel-load-file (expand-file-name "tariqk-common.org" starter-kit-dir))
+#+end_src
+
+* What goes in here
+Settings for emacs specific to an Asus Eee 1001HA Netbook, running Debian Wheeze, with the awesome window manager. This configuration assumes a display area of 1024 × 600, 160 GB HDD, 2 GB RAM, and a tiny Intel Atom Processor running at 1.6 GHz.
+
+* The Settings themselves
+Actual settings go here.
+
+The goals of these settings is to:
+- Maximize screen real estate.
+- Minimize eye strain.
+
+** Custom faces
+As it is right now, the fonts are a little too big, although the font (DejaVu Sans Mono) is pretty okay. Let's keep the font, but shrink the font (originally 113, now 100).
+
+#+begin_src emacs-lisp
+(custom-set-faces
+'(default ((t (:foundry "unknown" :family "DejaVu Sans Mono" :height 100)))))
+#+end_src
+
+** Window Setup The Way I Like It (Here)
+Basically, let's keep it transparent, and let's put in a color scheme.
+
+#+begin_src emacs-lisp
+(transparent 95 95)
+(require 'color-theme)
+(load-theme 'sanityinc-solarized-dark t)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)
+     (color-theme-sanityinc-solarized-dark)))
+#+end_src
+
+* TODO Other things to do.
+- [X] Install the color theme file and set it up here.
+- [ ] Put together an org-mode framework.
+- Setup:
+  + [ ] Python + virtualenv
+  + [ ] Git
+  + [ ] Common Lisp?
+  + [X] Lua-mode for awesome configuration
