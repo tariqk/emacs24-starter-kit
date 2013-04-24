@@ -64,6 +64,16 @@ Takes up space only. What a waste, especially on the netbook.
 (menu-bar-mode -1)
 #+end_src
 
+*** Rainbow Delimiters Mode
+Too many parentheses and the like mess me up. Can't have that, hence, rainbow-delimiters-mode.
+
+Anyway, did not want to touch the [[file:starter-kit.org][Emacs Starter Kit main configuration]], so we'll put it in here first, see how it works. If it doesn't I'll move it back to emacs-starter.org.
+
+#+begin_src emacs-lisp
+  (require 'rainbow-delimiters)
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+#+end_src
+
 ** Backend Stuff
 How things work in the background.
 
