@@ -49,11 +49,11 @@ Of course, since this annoyance really only comes during writing, and not coding
 This violates the rule for putting things that only matter on all machines, but the calling of this defun should only happen in emacs instances in windowing systems. In the mean-time, since this code is so common across a lot of OSes, might as well define it here.
 
 #+begin_src emacs-lisp
-(defun transparent(alpha-level no-focus-alpha-level)
-"Lets you make the window transparent"
-(interactive "nAlpha level (0-100): \nnNo focus alpha level (0-100): ")
-(set-frame-parameter (selected-frame) 'alpha (list alpha-level no-focus-alpha-level))
-(add-to-list 'default-frame-alist `(alpha ,alpha-level)))
+  (defun transparent(alpha-level no-focus-alpha-level)
+    "Lets you make the window transparent"
+    (interactive "nAlpha level (0-100): \nnNo focus alpha level (0-100): ")
+    (set-frame-parameter (selected-frame) 'alpha (list alpha-level no-focus-alpha-level))
+    (add-to-list 'default-frame-alist `(alpha ,alpha-level)))
 #+end_src
 
 *** Get rid of the toolbar and menu-bar
@@ -72,6 +72,16 @@ Anyway, did not want to touch the [[file:starter-kit.org][Emacs Starter Kit main
 #+begin_src emacs-lisp
   (require 'rainbow-delimiters)
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+#+end_src
+
+*** Custom org-faces & settings
+Some tweaks that don't involve color, just size, for org-mode. Also, enable syntax highlighting for blocks in org-mode. Tried that whole "colorize the =begin_src= =end_src= shit, didn't like it. Gave me eyestrain.
+
+#+begin_src emacs-lisp
+  (setq org-src-fontify-natively t)  
+  (custom-set-faces
+   '(org-document-title
+     ((t (:weight extra-bold :height 1.0)))))
 #+end_src
 
 ** Backend Stuff
