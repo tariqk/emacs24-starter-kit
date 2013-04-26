@@ -1,0 +1,60 @@
+#+TITLE: Configuration Specific To Mesiniaga's Lenovo Thinkpad E420
+#+STARTUP: indent hidestars
+#+OPTIONS: toc:nil num:nil ^:nil
+
+So this is basically the configuration file for munchkin, my work laptop.
+
+It's /way/ beefier than my netbook, but it isn't mine.
+
+* Before we begin
+Anyway, as with all hostname-specific machines, this little fella runs the following code to load the common features I expect from all my emacs instances:
+
+#+begin_src emacs-lisp
+(org-babel-load-file (expand-file-name "tariqk-common.org" starter-kit-dir))
+#+end_src
+
+* What goes in here
+Settings for emacs specific to a laptop , running Windows 7, Enterprise Edition.
+
+* The Settings themselves
+Actual settings go here.
+
+The goals of these settings is to:
+- Minimize eye strain.
+- Work seamlessly with Windows, or as well as it can anyway.
+- Be modular, so that I can take this out quickly in the event the system needs to be returned or reformatted.
+
+** Custom faces
+There is obviously no DejaVu Mono Sans installed in Windows by default, so we use Windows 7's default font, Consolas, which is decent.
+
+#+begin_src emacs-lisp
+(custom-set-faces
+'(default ((t (:foundry "outline" :family "Consolas" :height 100)))))
+#+end_src
+
+** Custom variables
+=flyspell= don't work normally with this variant of emacs, so we need to install it into the system and get Windows to link it here.
+
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   '(ispell-dictionary "british")
+   '(ispell-program-name "C:\\Program Files \(x86\)\\Aspell\\bin\\aspell.exe"))
+#+END_SRC
+
+** Window Setup The Way I Like It (Here)
+Basically, let's keep it transparent, and let's put in a color scheme. We'll do the color scheme after everything is sorted out.
+
+#+begin_src emacs-lisp
+  (transparent 80 80)
+  (require 'color-theme)
+  (eval-after-load "color-theme"
+    '(progn
+       (color-theme-initialize)
+       (color-theme-dark-laptop)))
+#+end_src
+* Other things to do.
+Nothing yet, so far. Probably org-mode. Or whatever mode that strikes my fancy, whenever.
+
+
+
+
