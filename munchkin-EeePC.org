@@ -44,7 +44,7 @@ Basically, let's keep it transparent, and let's put in a color scheme.
 
 * TODO Other things to do.
 - [X] Install the color theme file and set it up here.
-- [ ] Put together an org-mode framework.
+- [X] Put together an org-mode framework.
 - Setup:
   + [ ] Python + virtualenv
   + [ ] Git
