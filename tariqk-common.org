@@ -105,6 +105,13 @@ Everything involving the most common settings for org-mode, here in the common f
    '(org-pretty-entities t))   ; entitiespretty
 #+END_SRC
 
+*** Show-paren-mode: Show Expressions, not just matching brackets.
+Oh my GOD. From ErgoEmacs' Xah Lee, [[http://ergoemacs.org/emacs/emacs_editing_lisp.html][this trick]]:
+
+#+BEGIN_SRC emacs-lisp
+  (setq show-paren-style 'expression)
+#+END_SRC
+
 ** Backend Stuff
 How things work in the background.
 

@@ -42,6 +42,27 @@ Basically, let's keep it transparent, and let's put in a color scheme.
      (color-theme-sanityinc-solarized-dark)))
 #+end_src
 
+** Setting up SLIME
+
+Since I'll only be running Common Lisp on munchkin, I'll put the settings here for the time being. This presupposes that SBCL is installed, it's installed in =/usr/bin/sbcl=, and so on and so forth.
+
+#+BEGIN_SRC emacs-lisp
+  ;; src = http://common-lisp.net/project/slime/doc/html/Installation.html
+  (setq inferior-lisp-program "/usr/bin/sbcl")       ; the Lisp system
+  (add-to-list 'load-path "~/projects/lisp/slime/")  ; the SLIME directory
+  (require 'slime)
+  (slime-setup)
+#+END_SRC
+
+And then there's more tweaks to speed up loading slime:
+
+#+BEGIN_SRC emacs-lisp
+  ;; src = http://common-lisp.net/project/slime/doc/html/Loading-Swank-faster.html
+  (setq slime-lisp-implementations
+        '((sbcl ("sbcl" "--core" "sbcl.core-for-slime"))))
+#+END_SRC
+
+
 * TODO Other things to do.
 - [X] Install the color theme file and set it up here.
 - [X] Put together an org-mode framework.
