@@ -98,11 +98,12 @@ Everything involving the most common settings for org-mode, here in the common f
 
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables
-   ; values that normally go under the #+STARTUP header:
-   '(org-hide-leading-stars t) ; hidestars
-   '(org-startup-indented t)   ; indent
-   '(org-log-done t)           ; logdone
-   '(org-pretty-entities t))   ; entitiespretty
+   ; values that normally go under the #+STARTUP (except where mentioned) header:
+   '(org-hide-leading-stars t)              ; hidestars
+   '(org-startup-indented t)                ; indent
+   '(org-log-done t)                        ; logdone
+   '(org-pretty-entities t)                 ; entitiespretty
+   '(org-export-with-sub-superscripts nil)) ; #+OPTIONS: ^:{}
 #+END_SRC
 
 *** Show-paren-mode: Show Expressions, not just matching brackets.
