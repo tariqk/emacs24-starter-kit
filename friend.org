@@ -34,7 +34,7 @@ Basically, let's keep it transparent, and let's put in a color scheme.
 #+begin_src emacs-lisp
 (require 'color-theme)
 (color-theme-solarized-dark)
-(transparent 55 55)
+(transparent 75 75)
 (toggle-frame-maximized)
 #+end_src
 
