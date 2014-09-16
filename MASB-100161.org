@@ -69,8 +69,13 @@ And once that's all done, just maximize the window, w32-style. And maybe load di
   (dired "~/Documents/Projects")
 #+end_src
 * Other things to do.
-Nothing yet, so far. Probably org-mode. Or whatever mode that strikes my fancy, whenever.
 
+** Using PuTTY instead of SSH
 
+Unlike Linux systems which can use SSH, this system will need to use PuTTY.
 
-
+#+begin_src emacs-lisp
+(require 'tramp)
+(set-default 'tramp-auto-save-directory "C:\Users\User\AppData\Local\Temp")
+(set-default 'tramp-default-method "plinkx")
+#+end_src
