@@ -40,11 +40,28 @@ Basically, let's keep it transparent, and let's put in a color scheme.
 
 #+RESULTS:
 
+** Stuff for development
+Since I'm using this computer to develop projects, here are some language-specific settings for specific packages.
+
+*** Python
+Code for Python.
+
+#+begin_src emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives
+               '("elpy" . "http://jorgenschaefer.github.io/packages/"))
+  (package-initialize)
+  (elpy-enable)
+#+end_src
+
 * TODO Other things to do.
-- [ ] Test this out and see if it's working.
-  + [ ] Remove annoyances (menu-bar, light color-scheme).
-  + [ ] Install the color theme file and set it up here.
+- [X] Test this out and see if it's working.
+  + [X] Remove annoyances (menu-bar, light color-scheme).
+  + [X] Install the color theme file and set it up here.
 - [X] Put together an org-mode framework.
 - Setup:
   + [ ] Git?
   + [ ] Common Lisp?
+  + [ ] Python
+    * [ ] el-py
+    * [ ] pydoc?
