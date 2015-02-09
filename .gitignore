@@ -51,7 +51,15 @@ secret.org
 .emacs.desktop*
 .*~
 agent/*
+<<<<<<< HEAD
 /ido.last
 /recentf
 /%backup%~
 /#friend.el#
+=======
+
+## package directory
+!literate-starter-kit-pkg.el
+literate-starter-kit/
+literate-starter-kit.tar
+>>>>>>> master
