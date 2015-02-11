@@ -62,3 +62,4 @@ literate-starter-kit.tar
 /recentf
 /%backup%~
 /#friend.el#
+server/*

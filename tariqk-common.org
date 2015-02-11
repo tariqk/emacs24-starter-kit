@@ -106,11 +106,25 @@ Everything involving the most common settings for org-mode, here in the common f
    '(org-export-with-sub-superscripts nil)) ; #+OPTIONS: ^:{}
 #+END_SRC
 
-*** Show-paren-mode: Show Expressions, not just matching brackets.
+*** =show-paren-mode=: Show Expressions, not just matching brackets.
 Oh my GOD. From ErgoEmacs' Xah Lee, [[http://ergoemacs.org/emacs/emacs_editing_lisp.html][this trick]]:
 
 #+BEGIN_SRC emacs-lisp
   (setq show-paren-style 'expression)
+#+END_SRC
+
+*** =form-feed-mode= activated where I need it.
+
+Okay, all of this presumes =form-feed= is installed, but if it is, enable it for =help-mode=, =text-mode= and =compilation-mode=. 
+
+I think I'll activate =form-feed-mode= only when I need to on specific machines, since only some interpreters and compilers recognize the form-feed character.
+
+#+BEGIN_SRC emacs-lisp
+  (when (require 'form-feed nil 'noerror)
+    (progn
+      (add-hook 'text-mode-hook #'form-feed-mode)
+      (add-hook 'help-mode-hook #'form-feed-mode)
+      (add-hook 'compilation-mode-hook #'form-feed-mode)))
 #+END_SRC
 
 ** Backend Stuff
