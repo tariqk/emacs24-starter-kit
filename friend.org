@@ -44,7 +44,7 @@ Basically, let's keep it transparent, and let's put in a color scheme.
 Since I'm using this computer to develop projects, here are some language-specific settings for specific packages.
 
 *** Python
-Code for Python.
+Code for Python. This basically enables =elpy-mode= and includes the elpy repository.
 
 #+begin_src emacs-lisp
   (require 'package)
@@ -52,6 +52,15 @@ Code for Python.
                '("elpy" . "http://jorgenschaefer.github.io/packages/"))
   (package-initialize)
   (elpy-enable)
+#+end_src
+
+**** Including =form-feed-mode= for =elpy-mode=
+
+And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Python-developing mode I most frequent:
+
+#+begin_src emacs-lisp
+  (when (require 'form-feed nil 'noerror)
+    (add-hook 'python-mode-hook #'form-feed-mode))
 #+end_src
 
 * TODO Other things to do.
