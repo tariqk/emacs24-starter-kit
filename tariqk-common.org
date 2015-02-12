@@ -142,7 +142,7 @@ This does mean that package loads twice. Ehh, should be no problem, right?
                          ("ori" . "http://tromey.com/elpa/")
                          ("gnu" . "http://elpa.gnu.org/packages/")
                          ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("MELPA" . "http://melpa.milkbox.net/packages/")
+                         ("MELPA" . "http://melpa.org/packages/")
                          ("org" . "http://orgmode.org/elpa/")
 ))
 
