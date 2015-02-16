@@ -58,8 +58,6 @@ So it turns out that the default directory for =find-file= is somewhere in the e
 #+BEGIN_SRC emacs-lisp
   (setq default-directory "~")
 #+END_SRC
-**** Fixing TRAMP's default terminal type.
-TRAMP /insists/ on taking on =xterm= as its terminal type. This is annoying. Let's try to fix it.
 
 ** Window Setup The Way I Like It (Here)
 Basically, let's keep it transparent, and let's put in a color scheme. We'll do the color scheme after everything is sorted out.
@@ -75,15 +73,4 @@ And once that's all done, just maximize the window, w32-style. And maybe load di
        (color-theme-dark-laptop)))
   (w32-send-sys-command 61488)
   (dired "~/Documents/Projects")
-#+end_src
-* Other things to do.
-
-** Using PuTTY instead of SSH
-
-Unlike Linux systems which can use SSH, this system will need to use PuTTY.
-
-#+begin_src emacs-lisp
-(require 'tramp)
-(set-default 'tramp-auto-save-directory "C:\\Users\\User\\AppData\\Local\\Temp")
-(set-default 'tramp-default-method "plinkx")
 #+end_src
