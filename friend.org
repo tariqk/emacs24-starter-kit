@@ -63,6 +63,62 @@ And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Py
     (add-hook 'python-mode-hook #'form-feed-mode))
 #+end_src
 
+**** =pygame=-specific settings.
+
+Right now it's just settings for putting in documentation for the latest version of =pygame= (from the website).
+
+#+begin_src emacs-lisp
+  (require 'pydoc-info)
+  (info-lookup-add-help :mode 'python-mode :parse-rule 'pydoc-info-puthon-symbol-at-point
+                        :doc-spec '(("(python)Index" pydoc-info-lookup-transform-entry)
+                                    ("(pygame)Index" pydoc-info-lookup-transform-entry)))
+#+end_src
+
+In any case, for posterity's sake, here's how I got it installed.
+
+#+begin_src sh :tangle no
+  #!/bin/bash
+
+  cd /tmp  # do the installation in the tmp directory.
+  mkdir pygame-dev-docs
+  virtualenv pygame-dev-docs/ # create the python virtual environment
+  cd pygame-dev-docs/
+
+  # activate the virtual environment; now nothing touches the main system
+  . bin/activate 
+
+  # install latest sphinx dev version...
+  pip install https://bitbucket.org/jonwaltman/sphinx-info/get/51850bb9b7a1.zip
+
+  # download and unzip latest pygame release (as of 2015-02-19).
+  wget https://bitbucket.org/pygame/pygame/get/db5966ca2b4d.zip
+  unzip db5966ca2b4d.zip
+
+  # Move to the reST source documents, and prepare the conf.py file
+  cd pygame-pygame-db5966ca2b4d/docs/reST/
+  cat >> conf.py
+
+  texinfo_documents = [
+      ('index', 'pygame', u'Pygame Documentation', u'Pygame Developers',
+       'Pygame', u'The Pygame Documentation', u'Software Development')
+  ]
+    
+  # Generate the Texinfo file, build the Info file and install it
+  mkdir -p build/texinfo build/doctrees
+  sphinx-build -b texinfo -d build/doctrees . build/texinfo
+  cd build/texinfo
+  makeinfo --no-split pygame.texi
+  sudo cp pygame.info /usr/share/info
+  sudo ginstall-info --info-dir=/usr/share/info pygame.info # install-info is now ginstall-info
+  info pygame # test it out
+
+  # Cleanup
+
+  deactivate
+  cd ~
+  rm -rf /tmp/pygame-dev-docs
+#+end_src
+
 * TODO Other things to do.
 - [X] Test this out and see if it's working.
   + [X] Remove annoyances (menu-bar, light color-scheme).
