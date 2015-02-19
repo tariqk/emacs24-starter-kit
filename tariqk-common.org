@@ -26,9 +26,7 @@ How things appear on your emacs screen.
 *** CUA-mode
 So I grew up on Windows systems. 
 
-While I do get /some/ of the terminology (i.e. C-k means cut everything between the cursor to
-EOL and put it into the kill-ring, C-y means paste the last entry from
-the kill-ring onto the document), I use too many Windows tools to allow me to mentally switch gears every time I change machines. So CUA-mode it is.
+While I do get /some/ of the terminology (i.e. C-k means cut everything between the cursor to EOL and put it into the kill-ring, C-y means paste the last entry from the kill-ring onto the document), I use too many Windows tools to allow me to mentally switch gears every time I change machines. So CUA-mode it is.
 
 #+begin_src emacs-lisp
 (cua-mode)
@@ -76,9 +74,10 @@ However, before we start, we make sure that the package is already installed:
 Load rainbow-delim mode for both programming-modes and org-mode; mostly because org-mode has source-code blocks, and I'd like to be able to see paren matching in those blocks.
 
 #+begin_src emacs-lisp
-  (require 'rainbow-delimiters)
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'org-mode-hook 'rainbow-delimiters-mode)
+  (when (require 'rainbow-delimiters nil 'noerror)
+    (progn
+      (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+      (add-hook 'org-mode-hook 'rainbow-delimiters-mode)))
 #+end_src
 
 *** Custom org-faces & settings

@@ -32,10 +32,11 @@ The goals of these settings is to:
 Basically, let's keep it transparent, and let's put in a color scheme.
 
 #+begin_src emacs-lisp
-(require 'color-theme)
-(color-theme-solarized-dark)
-(transparent 85 85)
-(toggle-frame-maximized)
+  (when (require 'color-theme nil 'noerror)
+    (progn
+      (color-theme-solarized-dark)
+      (transparent 85 85)
+      (toggle-frame-maximized)))
 #+end_src
 
 #+RESULTS:
@@ -47,11 +48,12 @@ Since I'm using this computer to develop projects, here are some language-specif
 Code for Python. This basically enables =elpy-mode= and includes the elpy repository.
 
 #+begin_src emacs-lisp
-  (require 'package)
-  (add-to-list 'package-archives
-               '("elpy" . "http://jorgenschaefer.github.io/packages/"))
-  (package-initialize)
-  (elpy-enable)
+  (when (require 'package nil 'noerror)
+    (progn
+      (add-to-list 'package-archives
+                   '("elpy" . "http://jorgenschaefer.github.io/packages/"))
+      (package-initialize)
+      (elpy-enable)))
 #+end_src
 
 **** Including =form-feed-mode= for =elpy-mode=
@@ -68,10 +70,10 @@ And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Py
 Right now it's just settings for putting in documentation for the latest version of =pygame= (from the website).
 
 #+begin_src emacs-lisp
-  (require 'pydoc-info)
-  (info-lookup-add-help :mode 'python-mode :parse-rule 'pydoc-info-puthon-symbol-at-point
-                        :doc-spec '(("(python)Index" pydoc-info-lookup-transform-entry)
-                                    ("(pygame)Index" pydoc-info-lookup-transform-entry)))
+  (when (require 'pydoc-info nil 'noerror)
+    (info-lookup-add-help :mode 'python-mode :parse-rule 'pydoc-info-puthon-symbol-at-point
+                          :doc-spec '(("(python)Index" pydoc-info-lookup-transform-entry)
+                                      ("(pygame)Index" pydoc-info-lookup-transform-entry))))
 #+end_src
 
 In any case, for posterity's sake, here's how I got it installed.

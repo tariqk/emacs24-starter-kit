@@ -63,3 +63,5 @@ literate-starter-kit.tar
 /%backup%~
 /#friend.el#
 server/*
+/#friend.org#
+/.#friend.org
