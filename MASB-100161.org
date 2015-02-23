@@ -66,11 +66,12 @@ And once that's all done, just maximize the window, w32-style. And maybe load di
 
 #+begin_src emacs-lisp
   (transparent 80 80)
-  (require 'color-theme)
-  (eval-after-load "color-theme"
-    '(progn
-       (color-theme-initialize)
-       (color-theme-dark-laptop)))
-  (w32-send-sys-command 61488)
+  (when (require 'color-theme nil 'noerror)
+    (progn
+      (eval-after-load "color-theme"
+        '(progn
+           (color-theme-initialize)
+           (color-theme-dark-laptop)))
+      (w32-send-sys-command 61488)))
   (dired "~/Documents/Projects")
 #+end_src

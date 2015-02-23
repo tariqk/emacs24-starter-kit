@@ -135,17 +135,16 @@ I never knew that org-mode got its own package library. So cool. But what was mi
 This does mean that package loads twice. Ehh, should be no problem, right?
 
 #+begin_src emacs-lisp
-(setq package-archives '(
-;; If it isn't obvious, the format is like this:
-;;                       ("archive-name" . "repo URL")
-                         ("ori" . "http://tromey.com/elpa/")
-                         ("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("MELPA" . "http://melpa.org/packages/")
-                         ("org" . "http://orgmode.org/elpa/")
-))
-
-(package-initialize) ; reinitialize!
+  (when (require 'package nil 'noerror)
+    (progn
+      (setq package-archives '(
+       ;; If it isn't obvious, the format is like this:
+       ;;                  ("archive-name" . "repo URL")
+                           ("ori" . "http://tromey.com/elpa/")
+                           ("gnu" . "http://elpa.gnu.org/packages/")
+                           ("marmalade" . "http://marmalade-repo.org/packages/")
+                           ("MELPA" . "http://melpa.org/packages/")
+                           ("org" . "http://orgmode.org/elpa/")
+                           ))
+      (package-initialize))) ; reinitialize!
 #+end_src
-* Additional features to add.
-Put anything else to add here, and mark it as to-do. Ho, hey!
