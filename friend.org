@@ -45,7 +45,9 @@ Basically, let's keep it transparent, and let's put in a color scheme.
 Since I'm using this computer to develop projects, here are some language-specific settings for specific packages.
 
 *** Python
-Code for Python. This basically enables =elpy-mode= and includes the elpy repository.
+Code for Python.
+
+**** Enable =elpy-mode= and add =elpy= repository.
 
 #+begin_src emacs-lisp
   (when (require 'package nil 'noerror)
@@ -53,7 +55,13 @@ Code for Python. This basically enables =elpy-mode= and includes the elpy reposi
       (add-to-list 'package-archives
                    '("elpy" . "http://jorgenschaefer.github.io/packages/"))
       (package-initialize)
-      (elpy-enable)))
+      (when 
+          (not (package-installed-p 'elpy))
+        (progn
+          (message "%s" "elpy appears to not be installed in your system. Installing...")
+          (package-install 'elpy)))
+      (when (require 'elpy nil 'noerror)
+        (elpy-enable))))
 #+end_src
 
 **** Including =form-feed-mode= for =elpy-mode=
@@ -63,6 +71,33 @@ And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Py
 #+begin_src emacs-lisp
   (when (require 'form-feed nil 'noerror)
     (add-hook 'python-mode-hook #'form-feed-mode))
+#+end_src
+
+**** Enabling =whitespace-mode= for python editing, and automatic =whitespace-cleanup=.
+
+Since Python is sensitive about whitespace, why not?
+
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook #'whitespace-mode)
+  (setq whitespace-display-mappings
+        '(
+          (newline-mark 10 [182 10])
+          ))
+#+end_src
+
+And after that, allow emacs to cleanup whitespace after you modify a file, at least for Python. [[https://www.gc3.uzh.ch/blog/Whitespace_cleanup_with_Emacs/][Reference]].
+
+#+begin_src emacs-lisp
+  (defun whitespace-cleanup* ()
+    (let* ((modified-before-p (buffer-modified-p)))
+      (whitespace-cleanup)
+      (if (not modified-before-p)
+          (not-modified))))
+
+  (defun whitespace-cleanup-on-save ()
+    (add-hook 'write-contents-hooks #'whitespace-cleanup))
+
+  (add-hook 'python-mode-hook #'whitespace-cleanup-on-save)
 #+end_src
 
 **** =pygame=-specific settings.
