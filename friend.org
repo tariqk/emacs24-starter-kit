@@ -145,7 +145,7 @@ What this requires:
 
   # Move to the source documentation, and prepare the conf.py file
   cd Python-2.7.3/Doc
-  cat <<HABIS_DAH_YEY
+  cat <<HABIS_DAH_YEY >> conf.py
 
   texinfo_documents = [
       ('contents', 'python', 'Python Documentation', _stdauthor,
