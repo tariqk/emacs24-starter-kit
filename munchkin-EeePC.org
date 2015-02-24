@@ -64,10 +64,7 @@ And then there's more tweaks to speed up loading slime:
 
 
 * TODO Other things to do.
-- [X] Install the color theme file and set it up here.
-- [X] Put together an org-mode framework.
 - Setup:
   + [ ] Python + virtualenv
-  + [ ] Git
   + [ ] Common Lisp?
   + [X] Lua-mode for awesome configuration

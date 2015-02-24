@@ -123,6 +123,7 @@ What this requires:
 - =bash=
 - =pip=
 - =virtualenv=
+- Access to =sudo=
 
 #+begin_src sh :tangle no
   #!/bin/bash
@@ -196,15 +197,3 @@ What this requires:
   cd ~
   rm -rf /tmp/python-pygame-docs
 #+end_src
-
-* TODO Other things to do.
-- [X] Test this out and see if it's working.
-  + [X] Remove annoyances (menu-bar, light color-scheme).
-  + [X] Install the color theme file and set it up here.
-- [X] Put together an org-mode framework.
-- Setup:
-  + [ ] Git?
-  + [ ] Common Lisp?
-  + [ ] Python
-    * [ ] el-py
-    * [ ] pydoc?
