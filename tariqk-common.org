@@ -61,7 +61,7 @@ Takes up space only. What a waste, especially on the netbook.
 (menu-bar-mode -1)
 #+end_src
 
-*** Rainbow Delimiters Mode
+*** =rainbow-delimiters= Mode
 Too many parentheses and the like mess me up. Can't have that, hence, rainbow-delimiters-mode.
 
 However, before we start, we make sure that the package is already installed:
@@ -76,8 +76,8 @@ Load rainbow-delim mode for both programming-modes and org-mode; mostly because 
 #+begin_src emacs-lisp
   (when (require 'rainbow-delimiters nil 'noerror)
     (progn
-      (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-      (add-hook 'org-mode-hook 'rainbow-delimiters-mode)))
+      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+      (add-hook 'org-mode-hook #'rainbow-delimiters-mode)))
 #+end_src
 
 *** Custom org-faces & settings
@@ -124,6 +124,20 @@ I think I'll activate =form-feed-mode= only when I need to on specific machines,
       (add-hook 'text-mode-hook #'form-feed-mode)
       (add-hook 'help-mode-hook #'form-feed-mode)
       (add-hook 'compilation-mode-hook #'form-feed-mode)))
+#+END_SRC
+
+*** Make =org-bullet= install & load, put it in org-mode
+
+Can't think of a reason why not. Why not?
+
+#+BEGIN_SRC emacs-lisp
+
+  (unless (package-installed-p 'org-bullets)
+    (package-install 'org-bullets))
+
+  (when (require 'org-bullets nil 'noerror)
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
 #+END_SRC
 
 ** Backend Stuff
