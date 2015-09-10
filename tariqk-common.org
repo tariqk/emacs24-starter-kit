@@ -67,8 +67,7 @@ Too many parentheses and the like mess me up. Can't have that, hence, rainbow-de
 However, before we start, we make sure that the package is already installed:
 
 #+BEGIN_SRC emacs-lisp
-  (unless (package-installed-p 'rainbow-delimiters)
-    (package-install 'rainbow-delimiters))
+  (starter-kit-install-if-needed 'rainbow-delimiters)
 #+END_SRC
 
 Load rainbow-delim mode for both programming-modes and org-mode; mostly because org-mode has source-code blocks, and I'd like to be able to see paren matching in those blocks.
@@ -132,8 +131,7 @@ Can't think of a reason why not. Why not?
 
 #+BEGIN_SRC emacs-lisp
 
-  (unless (package-installed-p 'org-bullets)
-    (package-install 'org-bullets))
+  (starter-kit-install-if-needed 'org-bullets)
 
   (when (require 'org-bullets nil 'noerror)
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
