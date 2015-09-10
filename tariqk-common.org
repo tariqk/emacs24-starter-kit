@@ -162,3 +162,11 @@ This does mean that package loads twice. Ehh, should be no problem, right?
                            ))
       (package-initialize))) ; reinitialize!
 #+end_src
+
+** Activating custom =starter-kit= modules.
+I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
+
+#+begin_src emacs-lisp
+  (starter-kit-load "org")
+  (starter-kit-load "yasnippet")
+#+end_src
