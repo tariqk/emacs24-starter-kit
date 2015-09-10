@@ -2,9 +2,9 @@
 #+STARTUP: indent hidestars
 #+OPTIONS: toc:nil num:nil ^:nil
 
-So this is basically the configuration file for munchkin, my work laptop.
+So this is basically the configuration file for MASB-100161, my work laptop.
 
-It's /way/ beefier than my netbook, but it isn't mine.
+It's getting on with age, it has a whole bunch of weird Windows hacks to make it work properly, and I don't ultimately own it.
 
 * Before we begin
 Anyway, as with all hostname-specific machines, this little fella runs the following code to load the common features I expect from all my emacs instances:
@@ -67,11 +67,10 @@ And once that's all done, just maximize the window, w32-style. And maybe load di
 #+begin_src emacs-lisp
   (transparent 80 80)
   (when (require 'color-theme nil 'noerror)
-    (progn
       (eval-after-load "color-theme"
         '(progn
            (color-theme-initialize)
-           (color-theme-dark-laptop)))
-      (w32-send-sys-command 61488)))
+           (color-theme-dark-laptop))))
   (dired "~/Documents/Projects")
+  (toggle-frame-maximized)
 #+end_src

@@ -57,8 +57,8 @@ This violates the rule for putting things that only matter on all machines, but 
 Takes up space only. What a waste, especially on the netbook.
 
 #+begin_src emacs-lisp
-(tool-bar-mode -1)
-(menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
 #+end_src
 
 *** =rainbow-delimiters= Mode
