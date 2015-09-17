@@ -47,7 +47,28 @@ Since I'm using this computer to develop projects, here are some language-specif
 *** Python
 Code for Python.
 
+**** Install =cython-mode=
+=starter-kit-python= has a bit about =cython-mode= that I think I want. So I'll install this pre-emptively so that I can get it.
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-install-if-needed 'cython-mode)
+#+END_SRC
+
+**** Enable =starter-kit= for python
+=starter-kit= has some support for the Python language, and after thinking about it, I don't think adding it into our setup should be too harmful.
+
+#+BEGIN_SRC emacs-lisp
+  (starter-kit-load "python")
+#+END_SRC
 **** Enable =elpy-mode= and add =elpy= repository.
+
+Basically this does three things:
+
+1. Install the =elpy= repository that specifically hosts the latest version of =elpy=.
+2. If =elpy-mode= isn't installed, install it.
+3. Enable it.
+
+The source for this comes from the [[https://github.com/jorgenschaefer/elpy][elpy github page]].
 
 #+begin_src emacs-lisp
   (when (require 'package nil 'noerror)
