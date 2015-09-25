@@ -218,3 +218,75 @@ What this requires:
   cd ~
   rm -rf /tmp/python-pygame-docs
 #+end_src
+
+*** Javascript
+Code for Javascript
+
+**** Install =js2-mode= and =ac-js2=
+
+Based on [[https://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][this recommendation]], first we begin by installing =js2-mode= and =ac-js2=. Rather than manually installing it using =package=, let's take advantage of what =starter-kit= provides.
+
+#+begin_src emacs-lisp
+  (starter-kit-install-if-needed 'js2-mode 'ac-js2)
+#+end_src
+
+***** Configure and setup =js2-mode=
+
+Add the necessary hooks to load when loading JavaScript files. As stated in the reference, =js2-mode= has four levels of highlighting. We're using level 4.
+
+#+begin_src emacs-lisp
+  (add-hook 'js-mode-hook 'js2-minor-mode)
+  (add-hook 'js2-mode-hook 'ac-js2-mode)
+  (setq js2-highlight-level 3)
+#+end_src
+
+Everything else looks like Too Much Work and not enough brain-width right now. I'll work on it later.
+*** CoffeeScript
+Setup for CoffeeScript.
+
+Some notes from the [[https://github.com/defunkt/coffee-mode][coffee-mode github page]]:
+
+#+begin_quote
+
+*Please do not install [[http://elpa.gnu.org/][GNU Emacs Lisp Package Archive]] version.*
+
+It's too old and many features(Block string, block comment etc) are not implemented.
+
+#+end_quote
+
+So, ok. We won't. But how?
+
+Based on [[http://www.lonecpluspluscoder.com/2014/11/using-elpa-pinned-packages-gnu-emacs-24-4/][this page]], by first pinning =coffee-mode= to the =MELPA= repository:
+
+#+begin_src emacs-lisp
+  (when (boundp 'package-pinned-packages)
+    (add-to-list package-pinned-packages
+                 '(coffee-mode . "marmalade")))
+  (package-initialize t)
+  (starter-kit-install-if-needed 'coffee-mode)
+#+end_src
+
+**** TODO Rethink how packages are installed
+
+One thing's come over me when I look at the above code: =package-pinned-packages= and the =melpa-stable= repository, located [[http://stable.melpa.org/packages/][here]].
+
+I think what I /do/ want to do is:
+
+1. Put in =melpa-stable= as a valid destination point in the repos.
+2. Make sure that most of the packages installed use, /by default/, =melpa-stable=, if possible:
+   + List down all the packages used
+   + Uninstall all the packages
+   + Reinstall using correct values.
+3. Find some way of centralizing this, and using only /one/ call to =starter-kit-install-if-needed=.
+
+*** Pandoc
+
+Not really a language, but a software tool that converts different markdown formats to other markdown formats.
+
+Based on the Installation notes found [[http://joostkremers.github.io/pandoc-mode/][here]], we're going to load =pandoc-mode= every time a text file is open, but /only/ if there are settings files:
+
+#+begin_src emacs-lisp :tangle yes
+  (starter-kit-install-if-needed 'pandoc-mode)
+  (add-hook 'text-mode-hook 'conditionally-turn-on-pand)
+  (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
+#+end_src
