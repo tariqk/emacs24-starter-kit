@@ -142,24 +142,29 @@ Can't think of a reason why not. Why not?
 How things work in the background.
 
 *** Package Management Locations
-I never knew that org-mode got its own package library. So cool. But what was missing from the whole list was MELPA. Where can liddat, where can?
+Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
 
-This does mean that package loads twice. Ehh, should be no problem, right?
+#+NAME: repository-names
+| ori          | http://tromey.com/elpa/             |
+| gnu          | http://elpa.gnu.org/packages/       |
+| marmalade    | http://marmalade-repo.org/packages/ |
+| MELPA        | http://melpa.org/packages/          |
+| MELPA-stable | http://stable.melpa.org/packages/   |
+| org          | http://orgmode.org/elpa/            | 
 
-#+begin_src emacs-lisp
+And then, using this, you can incorporate it, /sort of cleanly/, with this: 
+
+#+begin_src emacs-lisp :var names=repository-names[,0] addresses=repository-names[,1]
   (when (require 'package nil 'noerror)
     (progn
-      (setq package-archives '(
-       ;; If it isn't obvious, the format is like this:
-       ;;                  ("archive-name" . "repo URL")
-                           ("ori" . "http://tromey.com/elpa/")
-                           ("gnu" . "http://elpa.gnu.org/packages/")
-                           ("marmalade" . "http://marmalade-repo.org/packages/")
-                           ("MELPA" . "http://melpa.org/packages/")
-                           ("org" . "http://orgmode.org/elpa/")
-                           ))
+      (require 'cl) ; This will be sort of awkward if it doesn't exist at this point.
+      (setq package-archives (pairlis names addresses))
       (package-initialize))) ; reinitialize!
 #+end_src
+
+Now you /should/ be able to add, modify and delete repositories cleanly by using the org-tables format.
+
+Or everything would break and you'd have to go back to the last commit, but hey.
 
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
