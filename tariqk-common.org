@@ -145,20 +145,22 @@ How things work in the background.
 Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
 
 #+NAME: repository-names
-| ori          | http://tromey.com/elpa/             |
-| gnu          | http://elpa.gnu.org/packages/       |
-| marmalade    | http://marmalade-repo.org/packages/ |
+| label        | URI                                 |
+|--------------+-------------------------------------|
+| GNU          | http://elpa.gnu.org/packages/       |
 | MELPA        | http://melpa.org/packages/          |
 | MELPA-stable | http://stable.melpa.org/packages/   |
-| org          | http://orgmode.org/elpa/            | 
+| marmalade    | http://marmalade-repo.org/packages/ |
+| org          | http://orgmode.org/elpa/            |
+| original     | http://tromey.com/elpa/             |
 
 And then, using this, you can incorporate it, /sort of cleanly/, with this: 
 
-#+begin_src emacs-lisp :var names=repository-names[,0] addresses=repository-names[,1]
+#+begin_src emacs-lisp :var label=repository-names[,0] URI=repository-names[,1]
   (when (require 'package nil 'noerror)
     (progn
       (require 'cl) ; This will be sort of awkward if it doesn't exist at this point.
-      (setq package-archives (pairlis names addresses))
+      (setq package-archives (pairlis label URI))
       (package-initialize))) ; reinitialize!
 #+end_src
 
