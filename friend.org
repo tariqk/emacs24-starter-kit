@@ -64,23 +64,15 @@ Code for Python.
 
 Basically this does three things:
 
-1. Install the =elpy= repository that specifically hosts the latest version of =elpy=.
-2. If =elpy-mode= isn't installed, install it.
-3. Enable it.
+1. If =elpy-mode= isn't installed, install it.
+2. Enable it.
 
 The source for this comes from the [[https://github.com/jorgenschaefer/elpy][elpy github page]].
 
 #+begin_src emacs-lisp
   (when (require 'package nil 'noerror)
     (progn
-      (add-to-list 'package-archives
-                   '("elpy" . "http://jorgenschaefer.github.io/packages/"))
-      (package-initialize)
-      (when 
-          (not (package-installed-p 'elpy))
-        (progn
-          (message "%s" "elpy appears to not be installed in your system. Installing...")
-          (package-install 'elpy)))
+      (starter-kit-install-if-needed 'elpy)
       (when (require 'elpy nil 'noerror)
         (elpy-enable))))
 #+end_src

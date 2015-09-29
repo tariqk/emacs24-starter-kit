@@ -20,6 +20,60 @@ Actual settings go here.
 
 + NOTE :: Please remember that this should be common to /all/ emacs versions you run. This means stuff that run on terminals, stuff that runs on windowing systems, like that.
 
+** Backend Stuff
+How things work in the background.
+
+*** Package Management Locations
+Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
+
+#+NAME: repository-names
+| label        | URI                                       |
+|--------------+-------------------------------------------|
+| GNU          | http://elpa.gnu.org/packages/             |
+| elpy         | http://jorgenschaefer.github.io/packages/ |
+| marmalade    | http://marmalade-repo.org/packages/       |
+| MELPA        | http://melpa.org/packages/                |
+| org          | http://orgmode.org/elpa/                  |
+| MELPA-stable | http://stable.melpa.org/packages/         |
+| original     | http://tromey.com/elpa/                   |
+
+And then, using this, you can incorporate it, /sort of cleanly/, with this: 
+
+#+begin_src emacs-lisp :var label=repository-names[,0] URI=repository-names[,1]
+  (when (require 'package nil 'noerror)
+    (progn
+      (require 'cl) ; This will be sort of awkward if it doesn't exist at this point.
+      (setq package-archives (pairlis label URI))
+      (package-initialize))) ; reinitialize!
+#+end_src
+
+Now you /should/ be able to add, modify and delete repositories cleanly by using the org-tables format.
+
+Or everything would break and you'd have to go back to the last commit, but hey.
+
+*** Settings for package-pinning (common)
+
+Here are the list of packages that /must/ be installed on /all/ Emacs instances I control, along with the apt-pinning preferences.
+
+#+NAME: package-settings
+| package            | repository   |
+|--------------------+--------------|
+| org                | org          |
+| rainbow-delimiters | MELPA-stable |
+| form-feed          | MELPA-stable |
+| org-bullets        | MELPA-stable |
+
+And do basically two things: set the package-pinning options, and then install the packages if they don't exist:
+
+#+begin_src emacs-lisp :var package=package-settings[,0] repository=package-settings[,1]
+  (when (require 'package nil 'noerror)
+    (progn
+      (require 'cl)
+      (setq package-pinned-packages (pairlis package repository))
+      (starter-kit-install-if-needed 'package) ; Install packages if necessary
+      (package-initialize))) ; and reinitialize again
+#+end_src
+
 ** Interface
 How things appear on your emacs screen.
 
@@ -63,12 +117,6 @@ Takes up space only. What a waste, especially on the netbook.
 
 *** =rainbow-delimiters= Mode
 Too many parentheses and the like mess me up. Can't have that, hence, rainbow-delimiters-mode.
-
-However, before we start, we make sure that the package is already installed:
-
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'rainbow-delimiters)
-#+END_SRC
 
 Load rainbow-delim mode for both programming-modes and org-mode; mostly because org-mode has source-code blocks, and I'd like to be able to see paren matching in those blocks.
 
@@ -131,42 +179,10 @@ Can't think of a reason why not. Why not?
 
 #+BEGIN_SRC emacs-lisp
 
-  (starter-kit-install-if-needed 'org-bullets)
-
   (when (require 'org-bullets nil 'noerror)
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 #+END_SRC
-
-** Backend Stuff
-How things work in the background.
-
-*** Package Management Locations
-Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
-
-#+NAME: repository-names
-| label        | URI                                 |
-|--------------+-------------------------------------|
-| GNU          | http://elpa.gnu.org/packages/       |
-| MELPA        | http://melpa.org/packages/          |
-| MELPA-stable | http://stable.melpa.org/packages/   |
-| marmalade    | http://marmalade-repo.org/packages/ |
-| org          | http://orgmode.org/elpa/            |
-| original     | http://tromey.com/elpa/             |
-
-And then, using this, you can incorporate it, /sort of cleanly/, with this: 
-
-#+begin_src emacs-lisp :var label=repository-names[,0] URI=repository-names[,1]
-  (when (require 'package nil 'noerror)
-    (progn
-      (require 'cl) ; This will be sort of awkward if it doesn't exist at this point.
-      (setq package-archives (pairlis label URI))
-      (package-initialize))) ; reinitialize!
-#+end_src
-
-Now you /should/ be able to add, modify and delete repositories cleanly by using the org-tables format.
-
-Or everything would break and you'd have to go back to the last commit, but hey.
 
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
