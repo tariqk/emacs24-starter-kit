@@ -56,11 +56,10 @@ Or everything would break and you'd have to go back to the last commit, but hey.
 Here are the list of packages that /must/ be installed on /all/ Emacs instances I control, along with the apt-pinning preferences.
 
 #+NAME: package-settings
-| package            | repository   |
+| name               | repository   |
 |--------------------+--------------|
 | dired+             | MELPA        |
 | form-feed          | MELPA-stable |
-| org                | org          |
 | org-bullets        | MELPA-stable |
 | org-plus-contrib   | org          |
 | powerline          | MELPA-stable |
@@ -70,12 +69,18 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 
 And do basically two things: set the package-pinning options, and then install the packages if they don't exist:
 
-#+begin_src emacs-lisp :var package=package-settings[,0] repository=package-settings[,1]
+#+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1]
   (when (require 'package nil 'noerror)
     (progn
       (require 'cl)
-      (setq package-pinned-packages (pairlis package repository))
-      (starter-kit-install-if-needed 'package) ; Install packages if necessary
+      (setq package-pinned-packages (pairlis name repository))
+      (setq *tariqk-packages-to-install
+            (let (result)
+              (dolist (entry name result)
+                (setq result (append result (list (make-symbol entry)))))))
+      (dolist (pkg *tariqk-packages-to-install)
+        (when (not (package-installed-p pkg))
+          (package-install pkg)))
       (package-initialize))) ; and reinitialize again
 #+end_src
 
