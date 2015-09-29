@@ -58,10 +58,15 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 #+NAME: package-settings
 | package            | repository   |
 |--------------------+--------------|
-| org                | org          |
-| rainbow-delimiters | MELPA-stable |
+| dired+             | MELPA        |
 | form-feed          | MELPA-stable |
+| org                | org          |
 | org-bullets        | MELPA-stable |
+| org-plus-contrib   | org          |
+| powerline          | MELPA-stable |
+| rainbow-delimiters | MELPA-stable |
+| yasnippet          | MELPA-stable |
+| color-theme        | MELPA        |
 
 And do basically two things: set the package-pinning options, and then install the packages if they don't exist:
 
@@ -94,17 +99,6 @@ Of course, since this annoyance really only comes during writing, and not coding
 #+begin_src emacs-lisp
 (add-hook 'text-mode-hook 'turn-on-visual-line-mode)
 (remove-hook 'text-mode-hook 'turn-on-auto-fill)
-#+end_src
-
-*** The transparent window hack
-This violates the rule for putting things that only matter on all machines, but the calling of this defun should only happen in emacs instances in windowing systems. In the mean-time, since this code is so common across a lot of OSes, might as well define it here.
-
-#+begin_src emacs-lisp
-  (defun transparent(alpha-level no-focus-alpha-level)
-    "Lets you make the window transparent"
-    (interactive "nAlpha level (0-100): \nnNo focus alpha level (0-100): ")
-    (set-frame-parameter (selected-frame) 'alpha (list alpha-level no-focus-alpha-level))
-    (add-to-list 'default-frame-alist `(alpha ,alpha-level)))
 #+end_src
 
 *** Get rid of the toolbar and menu-bar
@@ -160,29 +154,72 @@ Oh my GOD. From ErgoEmacs' Xah Lee, [[http://ergoemacs.org/emacs/emacs_editing_l
 #+END_SRC
 
 *** =form-feed-mode= activated where I need it.
-
-Okay, all of this presumes =form-feed= is installed, but if it is, enable it for =help-mode=, =text-mode= and =compilation-mode=. 
-
-I think I'll activate =form-feed-mode= only when I need to on specific machines, since only some interpreters and compilers recognize the form-feed character.
+Enable it for =help-mode=, =text-mode=, =emacs-lisp-mode= and =compilation-mode=. 
 
 #+BEGIN_SRC emacs-lisp
   (when (require 'form-feed nil 'noerror)
     (progn
       (add-hook 'text-mode-hook #'form-feed-mode)
       (add-hook 'help-mode-hook #'form-feed-mode)
+      (add-hook 'emacs-lisp-mode #'form-feed-mode)
       (add-hook 'compilation-mode-hook #'form-feed-mode)))
 #+END_SRC
 
 *** Make =org-bullet= install & load, put it in org-mode
-
 Can't think of a reason why not. Why not?
 
 #+BEGIN_SRC emacs-lisp
-
   (when (require 'org-bullets nil 'noerror)
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
 #+END_SRC
+
+*** Activate =powerline=
+From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
+
+#+begin_src emacs-lisp
+  (require 'powerline)
+  (powerline-center-theme)
+#+end_src
+
+*** Define =prettify-symbols-alist= for =elisp-mode= and other-related modes
+Really it's for *a e s t h e t i c* reasons, hahaha.
+
+Anyway, because it'd probably be easier for myself, I'll just use the table format and work on it that way, since it's an alist, right? No harm in that.
+
+Although at the rate this is going I /might/ just want to put the whole table-into-alist thing as a common function.
+
+#+NAME:prettify-table
+| token    | code |
+|----------+------|
+| "not"    |  172 |
+| "*"      |  215 |
+| "/"      |  247 |
+| "->"     | 8594 |
+| "map"    | 8614 |
+| "/="     | 8800 |
+| "<="     | 8804 |
+| ">="     | 8805 |
+| "lambda" |  955 |
+
+My /god/, getting here was /balls/ hard. At least /this/ works — I tried refactoring the lambda functions into a =defun= and it /refused/. /To/. /Work/.
+
+This part of elisp I /really/ don't fucking grok. Some day I'll return to this. /God/.
+
+#+begin_src emacs-lisp :var token=prettify-table[,0] code=prettify-table[,1]
+  (require 'cl)
+
+  (setq tariqk-prettify-elisp-alist (pairlis token code))
+
+  (add-hook 'lisp-interaction-mode-hook
+            '(lambda ()
+               (setq prettify-symbols-alist tariqk-prettify-elisp-alist)
+               (prettify-symbols-mode 1)))
+
+  (add-hook 'emacs-lisp-mode-hook
+            '(lambda ()
+               (setq prettify-symbols-alist tariqk-prettify-elisp-alist)
+               (prettify-symbols-mode 1)))
+#+end_src
 
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
@@ -190,4 +227,19 @@ I can't believe I never included this in the first place. In any case, activatin
 #+begin_src emacs-lisp
   (starter-kit-load "org")
   (starter-kit-load "yasnippet")
+#+end_src
+
+** Common functions
+
+Functions used on different environments.
+
+*** The transparent window hack
+Considering how commonly this function is used across graphical GUIs, and how long the invocation appears, I figure it's best to refactor it and put it here.
+
+#+begin_src emacs-lisp
+  (defun transparent(alpha-level no-focus-alpha-level)
+    "Lets you make the window transparent"
+    (interactive "nAlpha level (0-100): \nnNo focus alpha level (0-100): ")
+    (set-frame-parameter (selected-frame) 'alpha (list alpha-level no-focus-alpha-level))
+    (add-to-list 'default-frame-alist `(alpha ,alpha-level)))
 #+end_src
