@@ -56,11 +56,10 @@ Or everything would break and you'd have to go back to the last commit, but hey.
 Here are the list of packages that /must/ be installed on /all/ Emacs instances I control, along with the apt-pinning preferences.
 
 #+NAME: package-settings :colnames yes
-| package            | repository   |
+| name               | repository   |
 |--------------------+--------------|
 | dired+             | MELPA        |
 | form-feed          | MELPA-stable |
-| org                | org          |
 | org-bullets        | MELPA-stable |
 | org-plus-contrib   | org          |
 | powerline          | MELPA-stable |
@@ -68,15 +67,23 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 | yasnippet          | MELPA-stable |
 | color-theme        | MELPA        |
 
-And do basically two things: set the package-pinning options, and then install the packages if they don't exist:
+And do basically two things: set the package-pinning options, and then install the packages if they don't exist.
 
-#+begin_src emacs-lisp :var package=package-settings[,0] repository=package-settings[,1]
+The [[http://emacs.stackexchange.com/a/17013/5509][basic solution]] is thanks to [[http://emacs.stackexchange.com/users/3889/xuchunyang][xuchunyang]] from the [[http://emacs.stackexchange.com][Emacs Stack Exchange site]], who provided me with the basic structure and pointed out my initial error in using =make-symbol= instead of =intern=, and to top it off, finished it all of in a =mapcar= and =mapc= structure to transform =name= from a list of strings to a list of symbols, thus eliminating the need to use temporary variables.
+
+Rather than using their suggestion of manually using =package-install=, however, I'm using =starter-kit='s own =starter-kit-install-if-needed= function. It's a little more readable, at any rate, and why repeat oneself?
+
+#+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1]
   (when (require 'package nil 'noerror)
-    (progn
-      (require 'cl)
-      (setq package-pinned-packages (pairlis package repository))
-      (starter-kit-install-if-needed 'package) ; Install packages if necessary
-      (package-initialize))) ; and reinitialize again
+    (when (require 'cl nil 'noerror)
+      (setq package-pinned-packages (pairlis name repository))
+
+      (let ((pkgs (mapcar #'intern name)))
+        (mapc (lambda (pkg)
+                (starter-kit-install-if-needed pkg))
+              pkgs))
+
+      (package-initialize)))
 #+end_src
 
 ** Interface
