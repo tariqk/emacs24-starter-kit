@@ -26,7 +26,7 @@ How things work in the background.
 *** Package Management Locations
 Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
 
-#+NAME: repository-names
+#+NAME: repository-names :colnames yes
 | label        | URI                                       |
 |--------------+-------------------------------------------|
 | GNU          | http://elpa.gnu.org/packages/             |
@@ -55,7 +55,7 @@ Or everything would break and you'd have to go back to the last commit, but hey.
 
 Here are the list of packages that /must/ be installed on /all/ Emacs instances I control, along with the apt-pinning preferences.
 
-#+NAME: package-settings
+#+NAME: package-settings :colnames yes
 | package            | repository   |
 |--------------------+--------------|
 | dired+             | MELPA        |
@@ -188,7 +188,7 @@ Anyway, because it'd probably be easier for myself, I'll just use the table form
 
 Although at the rate this is going I /might/ just want to put the whole table-into-alist thing as a common function.
 
-#+NAME:prettify-table
+#+NAME:prettify-table :colnames yes
 | token    | code |
 |----------+------|
 | "not"    |  172 |
