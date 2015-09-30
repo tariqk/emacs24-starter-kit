@@ -76,13 +76,11 @@ Rather than using their suggestion of manually using =package-install=, however,
 #+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1]
   (when (require 'package nil 'noerror)
     (when (require 'cl nil 'noerror)
-      (setq package-pinned-packages (pairlis name repository))
-
       (let ((pkgs (mapcar #'intern name)))
+        (setq package-pinned-packages (pairlis pkgs repository))
         (mapc (lambda (pkg)
                 (starter-kit-install-if-needed pkg))
               pkgs))
-
       (package-initialize)))
 #+end_src
 
@@ -184,8 +182,8 @@ Can't think of a reason why not. Why not?
 From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
 
 #+begin_src emacs-lisp
-  (require 'powerline)
-  (powerline-center-theme)
+  (when (require 'powerline nil 'noerror)
+    (powerline-center-theme))
 #+end_src
 
 *** Define =prettify-symbols-alist= for =elisp-mode= and other-related modes
