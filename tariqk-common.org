@@ -193,7 +193,7 @@ This puts together several tricks I've learned during working on this file:
    * and then =intern= to turn it into a symbol
 3. and then finally using =dolist= to iterate through every item and run the operations necessary
 
-I forsee that this will come very useful [[Define =prettify-symbols-alist= for =elisp-mode= and other-related modes][here]].
+I forsee that this will come very useful [[prettify][here]].
 
 #+BEGIN_SRC emacs-lisp :var modes=modes-needing-form-feed-mode[,0]
   (when (require 'form-feed nil 'noerror)
@@ -220,6 +220,7 @@ From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
 #+end_src
 
 *** Define =prettify-symbols-alist= for =elisp-mode= and other-related modes
+<<prettify>>
 Really it's for *a e s t h e t i c* reasons, hahaha.
 
 Anyway, because it'd probably be easier for myself, I'll just use the table format and work on it that way, since it's an alist, right? No harm in that.
