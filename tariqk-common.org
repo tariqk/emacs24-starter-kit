@@ -185,6 +185,16 @@ Here's a table of modes that need =form-feed-mode=.
 | emacs-lisp-mode  |
 | compilation-mode |
 
+This puts together several tricks I've learned during working on this file: 
+
+1. using =lexical-let= to use lexical binding in the section that needs it
+2. using =mapcar= to modify the list of items in place:
+   * first by using =concat= to add ="-hook"= to the string
+   * and then =intern= to turn it into a symbol
+3. and then finally using =dolist= to iterate through every item and run the operations necessary
+
+I forsee that this will come very useful [[Define =prettify-symbols-alist= for =elisp-mode= and other-related modes][here]].
+
 #+BEGIN_SRC emacs-lisp :var modes=modes-needing-form-feed-mode[,0]
   (when (require 'form-feed nil 'noerror)
     (when (require 'cl nil 'noerror)
