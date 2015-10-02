@@ -22,6 +22,7 @@ The goals of these settings is to:
 - Minimize eye strain.
 
 ** Custom faces
+Use the font that is available for the system.
 
 #+begin_src emacs-lisp
 (custom-set-faces
@@ -35,7 +36,7 @@ Basically, let's keep it transparent, and let's put in a color scheme.
   (when (require 'color-theme nil 'noerror)
     (progn
       (color-theme-solarized-dark)
-      (transparent 85 85)
+      (*hx-transparent 85 85)
       (toggle-frame-maximized)))
 #+end_src
 
@@ -83,7 +84,7 @@ And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Py
 
 #+begin_src emacs-lisp
   (when (require 'form-feed nil 'noerror)
-    (add-hook 'python-mode-hook #'form-feed-mode))
+    (add-hook 'python-mode-hook form-feed-mode))
 #+end_src
 
 **** Enabling =whitespace-mode= for python editing, and automatic =whitespace-cleanup=.
@@ -91,7 +92,7 @@ And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Py
 Since Python is sensitive about whitespace, why not?
 
 #+begin_src emacs-lisp
-  (add-hook 'python-mode-hook #'whitespace-mode)
+  (add-hook 'python-mode-hook whitespace-mode)
   (setq whitespace-display-mappings
         '(
           (newline-mark 10 [182 10])
@@ -227,9 +228,11 @@ Based on [[https://truongtx.me/2014/02/23/set-up-javascript-development-environm
 Add the necessary hooks to load when loading JavaScript files. As stated in the reference, =js2-mode= has four levels of highlighting. We're using level 4.
 
 #+begin_src emacs-lisp
-  (add-hook 'js-mode-hook 'js2-minor-mode)
-  (add-hook 'js2-mode-hook 'ac-js2-mode)
-  (setq js2-highlight-level 3)
+  (when (require 'js2-minor-mode nil 'noerror)
+    (add-hook 'js-mode-hook js2-minor-mode)
+    (setq js2-highlight-level 3)
+    (when (require 'ac-js2-mode nil 'noerror)
+      (add-hook 'js2-mode-hook ac-js2-mode)))
 #+end_src
 
 Everything else looks like Too Much Work and not enough brain-width right now. I'll work on it later.
@@ -253,12 +256,15 @@ Based on [[http://www.lonecpluspluscoder.com/2014/11/using-elpa-pinned-packages-
 #+begin_src emacs-lisp
   (when (boundp 'package-pinned-packages)
     (add-to-list package-pinned-packages
-                 '(coffee-mode . "marmalade")))
+                 '(coffee-mode . "MELPA-stable")))
   (package-initialize t)
   (starter-kit-install-if-needed 'coffee-mode)
 #+end_src
 
-**** TODO Rethink how packages are installed
+**** DONE Rethink how packages are installed
+CLOSED: <2015-09-30 Wed>
+
+UPDATE :: This is done as of commit =a6e7979=.
 
 One thing's come over me when I look at the above code: =package-pinned-packages= and the =melpa-stable= repository, located [[http://stable.melpa.org/packages/][here]].
 
@@ -279,6 +285,6 @@ Based on the Installation notes found [[http://joostkremers.github.io/pandoc-mod
 
 #+begin_src emacs-lisp :tangle yes
   (starter-kit-install-if-needed 'pandoc-mode)
-  (add-hook 'text-mode-hook 'conditionally-turn-on-pand)
+  (add-hook 'text-mode-hook 'conditionally-turn-on-pandoc)
   (add-hook 'pandoc-mode-hook 'pandoc-load-default-settings)
 #+end_src

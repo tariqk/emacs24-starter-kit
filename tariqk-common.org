@@ -20,6 +20,13 @@ Actual settings go here.
 
 + NOTE :: Please remember that this should be common to /all/ emacs versions you run. This means stuff that run on terminals, stuff that runs on windowing systems, like that.
 
+Before starting, though, perform this action, because =friend.org= invokes the =package= module, and wouldn't you know, it doesn't load up until then, thus causing havoc with =init.el=, I think. Emacs keeps putting in =(package-initialize)=, over and over again, on that machine:
+
+#+begin_src emacs-lisp
+  (when (require 'package nil 'noerror)
+    (package-initialize))
+#+end_src
+
 ** Common functions
 
 Functions used on different environments.
@@ -28,7 +35,7 @@ Functions used on different environments.
 Considering how commonly this function is used across graphical GUIs, and how long the invocation appears, I figure it's best to refactor it and put it here.
 
 #+begin_src emacs-lisp
-  (defun transparent(alpha-level no-focus-alpha-level)
+  (defun *hx-transparent(alpha-level no-focus-alpha-level)
     "Lets you make the window transparent"
     (interactive "nAlpha level (0-100): \nnNo focus alpha level (0-100): ")
     (set-frame-parameter (selected-frame) 'alpha (list alpha-level no-focus-alpha-level))
@@ -238,7 +245,7 @@ Although at the rate this is going I /might/ just want to put the whole table-in
 | ">="     | 8805 |
 | "lambda" |  955 |
 
-Thanks to [[stackoverflow.com/questions/32878675/using-elisp-local-variables-instead-of-global-variables-to-add-a-function-into-a][this conversation on StackOverflow]], I've had some headway in improving this function, which now broadly works. As it turns out, Emacs Lisp uses /dynamic binding/, which is something I still am not exactly accustomed to, since I'm more used to /lexical binding/. Thanks to [[http://stackoverflow.com/users/729907/drew][Drew]] for starting me off on that direction.
+Thanks to [[http://stackoverflow.com/questions/32878675/using-elisp-local-variables-instead-of-global-variables-to-add-a-function-into-a][this conversation on StackOverflow]], I've had some headway in improving this function, which now broadly works. As it turns out, Emacs Lisp uses /dynamic binding/, which is something I still am not exactly accustomed to, since I'm more used to /lexical binding/. Thanks to [[http://stackoverflow.com/users/729907/drew][Drew]] for starting me off on that direction.
 
 In any case, [[http://stackoverflow.com/users/324105/phils][phils]]' suggestion to use =cl='s =lexical-let= instead of vanilla =let= works, so I'm keeping it at this state right now. If the conversation evolves a little more I'll see what more I can do with that.
 

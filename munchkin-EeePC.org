@@ -33,7 +33,7 @@ As it is right now, the fonts are a little too big, although the font (DejaVu Sa
 Basically, let's keep it transparent, and let's put in a color scheme.
 
 #+begin_src emacs-lisp
-(transparent 95 95)
+(*hx-transparent 95 95)
 (require 'color-theme)
 (load-theme 'sanityinc-solarized-dark t)
 (eval-after-load "color-theme"

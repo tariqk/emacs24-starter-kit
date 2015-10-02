@@ -65,7 +65,7 @@ Basically, let's keep it transparent, and let's put in a color scheme. We'll do 
 And once that's all done, just maximize the window, w32-style. And maybe load dired?
 
 #+begin_src emacs-lisp
-  (transparent 80 80)
+  (*hx-transparent 80 80)
   (when (require 'color-theme nil 'noerror)
       (eval-after-load "color-theme"
         '(progn
