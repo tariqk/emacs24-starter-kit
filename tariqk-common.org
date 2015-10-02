@@ -100,10 +100,8 @@ Rather than using their suggestion of manually using =package-install=, however,
     (when (require 'cl nil 'noerror)
       (let ((pkgs (mapcar #'intern name)))
         (setq package-pinned-packages (pairlis pkgs repository))
-        (mapc (lambda (pkg)
-                (starter-kit-install-if-needed pkg))
-              pkgs))
-      (package-initialize)))
+        (apply 'starter-kit-install-if-needed pkgs)
+        (package-initialize))))
 #+end_src
 
 ** Interface

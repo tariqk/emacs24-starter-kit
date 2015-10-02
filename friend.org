@@ -2,7 +2,7 @@
 #+STARTUP: indent hidestars
 #+OPTIONS: toc:nil num:nil ^:nil
 
-So this is basically the configuration file for friend, the HP Pavilion Desktop running Crunchbang Waldorf. Dual-screen monitor setup.
+So this is basically the configuration file for friend, the HP Pavilion Desktop running Debian Jessie, formally Crunchbang Waldorf. Dual-screen monitor setup.
 
 * Before we begin
 Anyway, as with all hostname-specific machines, this little fella runs the following code to load the common features I expect from all my emacs instances:
@@ -10,6 +10,39 @@ Anyway, as with all hostname-specific machines, this little fella runs the follo
 #+begin_src emacs-lisp
 (org-babel-load-file (expand-file-name "tariqk-common.org" starter-kit-dir))
 #+end_src
+
+* Download some pre-requisites
+Now, the common-files should have done the following:
+
+- Loaded the compulsory modules that are common to all machines
+- Populated the =package-pinned-packages= variables.
+
+But that's for what's common in all machines. These are the packages that need to be installed on friend desktop:
+
+#+NAME: package-settings :colnames yes
+| name                  | repository   |
+|-----------------------+--------------|
+| ac-js2                | MELPA-stable |
+| coffee-mode           | MELPA-stable |
+| color-theme-solarized | MELPA        |
+| cython-mode           | MELPA-stable |
+| elpy                  | elpy         |
+| js2-mode              | MELPA-stable |
+| pandoc-mode           | MELPA-stable |
+| pydoc-info            | MELPA        |
+
+And now, to do what we did in =tariqk-common=: add /these/ package-pinning options, and then install them if they don't exist:
+
+#+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1]
+  (when (require 'package nil 'noerror)
+    (when (require 'cl nil 'noerror)
+      (lexical-let ((pkgs (mapcar #'intern name))
+                    (original))
+        (setq original package-pinned-packages)
+        (setq package-pinned-packages (append original (pairlis pkgs repository)))
+        (apply 'starter-kit-install-if-needed pkgs))
+        (package-initialize)))
+#+end_src  
 
 * What goes in here
 Settings for emacs specific to HP Pavilion Desktop, running CrunchBang Waldorf, with the OpenBox Window Manager. This configuration assumes a display area of 1600 × 900, 500 GB HDD, 250 GB SDD, 4 GB RAM, and a (presumably, I can't tell) x64 Intel Core Duo i3 Processor.
@@ -22,7 +55,7 @@ The goals of these settings is to:
 - Minimize eye strain.
 
 ** Custom faces
-Use the font that is available for the system.
+Use the font that is available for the syste2m.
 
 #+begin_src emacs-lisp
 (custom-set-faces
@@ -35,7 +68,8 @@ Basically, let's keep it transparent, and let's put in a color scheme.
 #+begin_src emacs-lisp
   (when (require 'color-theme nil 'noerror)
     (progn
-      (color-theme-solarized-dark)
+      (when (require 'color-theme-solarized nil 'noerror)
+        (color-theme-solarized-dark))
       (*hx-transparent 85 85)
       (toggle-frame-maximized)))
 #+end_src
@@ -48,13 +82,6 @@ Since I'm using this computer to develop projects, here are some language-specif
 *** Python
 Code for Python.
 
-**** Install =cython-mode=
-=starter-kit-python= has a bit about =cython-mode= that I think I want. So I'll install this pre-emptively so that I can get it.
-
-#+BEGIN_SRC emacs-lisp
-  (starter-kit-install-if-needed 'cython-mode)
-#+END_SRC
-
 **** Enable =starter-kit= for python
 =starter-kit= has some support for the Python language, and after thinking about it, I don't think adding it into our setup should be too harmful.
 
@@ -62,25 +89,21 @@ Code for Python.
   (starter-kit-load "python")
 #+END_SRC
 **** Enable =elpy-mode= and add =elpy= repository.
-
-Basically this does three things:
-
-1. If =elpy-mode= isn't installed, install it.
-2. Enable it.
+Basically, enable =elpy=.
 
 The source for this comes from the [[https://github.com/jorgenschaefer/elpy][elpy github page]].
 
 #+begin_src emacs-lisp
   (when (require 'package nil 'noerror)
     (progn
-      (starter-kit-install-if-needed 'elpy)
       (when (require 'elpy nil 'noerror)
         (elpy-enable))))
 #+end_src
 
-**** Including =form-feed-mode= for =elpy-mode=
+**** Including =form-feed-mode= for =python-mode=
+And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Python-developing mode I most frequent. 
 
-And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Python-developing mode I most frequent:
+This isn't added into the list of modes requiring =form-feed-mode= because so far only this machine uses =python-mode=.
 
 #+begin_src emacs-lisp
   (when (require 'form-feed nil 'noerror)
@@ -88,34 +111,31 @@ And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Py
 #+end_src
 
 **** Enabling =whitespace-mode= for python editing, and automatic =whitespace-cleanup=.
+Activate =whitespace-mode=, because Python /is/ very picky about whitespace.
 
-Since Python is sensitive about whitespace, why not?
+Am noticing the vector thing, and I'm wondering if I can't just export that as an =org-table=.
 
 #+begin_src emacs-lisp
-  (add-hook 'python-mode-hook whitespace-mode)
-  (setq whitespace-display-mappings
-        '(
-          (newline-mark 10 [182 10])
-          ))
+  (when (require 'whitespace nil 'noerror)
+        (setq whitespace-display-mappings
+              '((newline-mark 10 [182 10])))
+        (add-hook 'python-mode-hook whitespace-mode))
 #+end_src
 
-And after that, allow emacs to cleanup whitespace after you modify a file, at least for Python. [[https://www.gc3.uzh.ch/blog/Whitespace_cleanup_with_Emacs/][Reference]].
+And after that, allow emacs to cleanup whitespace after you modify a file, at least for Python. [[https://www.gc3.uzh.ch/blog/Whitespace_cleanup_with_Emacs/][Reference]], but removed that second =defun= and replaced it with a lambda, because it's a pain to get right.
 
 #+begin_src emacs-lisp
-  (defun whitespace-cleanup* ()
-    (let* ((modified-before-p (buffer-modified-p)))
-      (whitespace-cleanup)
-      (if (not modified-before-p)
-          (not-modified))))
-
-  (defun whitespace-cleanup-on-save ()
-    (add-hook 'write-contents-hooks #'whitespace-cleanup))
-
-  (add-hook 'python-mode-hook #'whitespace-cleanup-on-save)
+  (when (require 'whitespace nil 'noerror)
+    (defun whitespace-cleanup+ ()
+      (let* ((modified-before-p (buffer-modified-p)))
+        (whitespace-cleanup)
+        (if (not modified-before-p)
+            (not-modified))))
+    (add-hook 'python-mode-hook (lambda ()
+                                  (add-hook 'write-contents-hooks whitespace-cleanup+))))
 #+end_src
 
 **** =pygame=-specific settings.
-
 Right now it's just settings for putting in documentation for the latest version of =pygame= (from the website).
 
 #+begin_src emacs-lisp
@@ -125,12 +145,12 @@ Right now it's just settings for putting in documentation for the latest version
                                       ("(pygame)Index" pydoc-info-lookup-transform-entry))))
 #+end_src
 
-**** How I installed =pygame='s documents and =python= 2.7.3's documentation with minimal tears.
+***** How I installed =pygame='s documents and =python= 2.7.3's documentation with minimal tears.
+Well, this is for posterity's sake, but this set of instructions:
 
-Well, this is for posterity's sake, but this:
-
-- Installs the info documentation for =python= 2.7.3 (which is what Crunchbang Waldorf / Debian Wheezy uses).
-- Installs the info documentation for =pygame= development branch, dated <2015-02-15 Sun 15:26>.
+1. Installs the info documentation for =python= 2.7.3 (which is what Crunchbang Waldorf / Debian Wheezy uses).
+   - TODO :: install documentation for =python= 2.7.9, which is what Debian Jessie uses.
+2. Installs the info documentation for =pygame= development branch, dated <2015-02-15 Sun 15:26>.
 
 What this requires:
 
@@ -217,11 +237,7 @@ Code for Javascript
 
 **** Install =js2-mode= and =ac-js2=
 
-Based on [[https://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][this recommendation]], first we begin by installing =js2-mode= and =ac-js2=. Rather than manually installing it using =package=, let's take advantage of what =starter-kit= provides.
-
-#+begin_src emacs-lisp
-  (starter-kit-install-if-needed 'js2-mode 'ac-js2)
-#+end_src
+Based on [[https://truongtx.me/2014/02/23/set-up-javascript-development-environment-in-emacs/][this recommendation]].
 
 ***** Configure and setup =js2-mode=
 
@@ -235,31 +251,10 @@ Add the necessary hooks to load when loading JavaScript files. As stated in the 
       (add-hook 'js2-mode-hook ac-js2-mode)))
 #+end_src
 
-Everything else looks like Too Much Work and not enough brain-width right now. I'll work on it later.
 *** CoffeeScript
 Setup for CoffeeScript.
 
-Some notes from the [[https://github.com/defunkt/coffee-mode][coffee-mode github page]]:
-
-#+begin_quote
-
-*Please do not install [[http://elpa.gnu.org/][GNU Emacs Lisp Package Archive]] version.*
-
-It's too old and many features(Block string, block comment etc) are not implemented.
-
-#+end_quote
-
-So, ok. We won't. But how?
-
-Based on [[http://www.lonecpluspluscoder.com/2014/11/using-elpa-pinned-packages-gnu-emacs-24-4/][this page]], by first pinning =coffee-mode= to the =MELPA= repository:
-
-#+begin_src emacs-lisp
-  (when (boundp 'package-pinned-packages)
-    (add-to-list 'package-pinned-packages
-                 '(coffee-mode . "MELPA-stable")))
-  (package-initialize)
-  (starter-kit-install-if-needed 'coffee-mode)
-#+end_src
+Actually, since everything's been moved up the config file, nothing special here, yet.
 
 **** DONE Rethink how packages are installed
 CLOSED: <2015-09-30 Wed>
