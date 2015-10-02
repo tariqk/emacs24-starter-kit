@@ -109,7 +109,8 @@ Rather than using their suggestion of manually using =package-install=, however,
 ** Interface
 How things appear on your emacs screen.
 
-*** CUA-mode
+*** Interface changes that don't need new packages
+**** CUA-mode
 So I grew up on Windows systems. 
 
 While I do get /some/ of the terminology (i.e. C-k means cut everything between the cursor to EOL and put it into the kill-ring, C-y means paste the last entry from the kill-ring onto the document), I use too many Windows tools to allow me to mentally switch gears every time I change machines. So CUA-mode it is.
@@ -118,7 +119,22 @@ While I do get /some/ of the terminology (i.e. C-k means cut everything between 
 (cua-mode)
 #+end_src
 
-*** Visual-line-mode
+**** =show-paren-mode=: Show Expressions, not just matching brackets.
+Oh my GOD. From ErgoEmacs' Xah Lee, [[http://ergoemacs.org/emacs/emacs_editing_lisp.html][this trick]]:
+
+#+BEGIN_SRC emacs-lisp
+  (setq show-paren-style 'expression)
+#+END_SRC
+
+**** Get rid of the toolbar and menu-bar
+Takes up space only. What a waste, especially on the netbook.
+
+#+begin_src emacs-lisp
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+#+end_src
+
+**** Visual-line-mode
 I can't /stand/ having to muck around with linewraps while I'm writing. It's fucking annoying. So, instead, I shall use visual-line-mode.
 
 Of course, since this annoyance really only comes during writing, and not coding, we shall only put it on in text modes. Sounds fair? Hope so.
@@ -128,15 +144,73 @@ Of course, since this annoyance really only comes during writing, and not coding
 (remove-hook 'text-mode-hook 'turn-on-auto-fill)
 #+end_src
 
-*** Get rid of the toolbar and menu-bar
-Takes up space only. What a waste, especially on the netbook.
+**** Changes to modes related to Emacs Lisp
+As defined here, these are the modes that are related to Emacs Lisp:
+
+#+name: emacs-lisp-related-modes :colnames yes
+| mode-name             |
+|-----------------------|
+| emacs-lisp-mode       |
+| lisp-interaction-mode |
+| ielm-mode             |
+
+This table is used in the following manner:
+
+***** Activate =eldoc-mode= and tweak it's behaviour
+First, [[http://emacswiki.org/emacs/ElDoc][based on this suggestion]], highlight the =eldoc= arguments in =font-lock-variable-name-face=:
 
 #+begin_src emacs-lisp
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
+  (setq eldoc-argument-case '(lambda (arg)
+                               (propertize (upcase arg)
+                                           'face 'font-lock-variable-face)))
 #+end_src
 
-*** =rainbow-delimiters= Mode
+And then, activate =eldoc-mode=:
+
+#+begin_src emacs-lisp :var mode-name=emacs-lisp-related-modes[,0]
+  (when (require 'cl nil 'noerror)
+    (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) mode-name)))
+      (dolist (hook hooks)
+        (add-hook hook 'turn-on-eldoc-mode))))
+#+end_src
+
+***** Define and activate =prettify-symbols-alist=
+Really it's for *a e s t h e t i c* reasons, hahaha.
+
+Anyway, because it'd probably be easier for myself, I'll just use the table format and work on it that way, since it's an alist, right? No harm in that.
+
+#+NAME:prettify-table :colnames yes
+| token    | code |
+|----------+------|
+| "not"    |  172 |
+| "*"      |  215 |
+| "/"      |  247 |
+| "->"     | 8594 |
+| "map"    | 8614 |
+| "/="     | 8800 |
+| "<="     | 8804 |
+| ">="     | 8805 |
+| "lambda" |  955 |
+
+Thanks to [[http://stackoverflow.com/questions/32878675/using-elisp-local-variables-instead-of-global-variables-to-add-a-function-into-a][this conversation on StackOverflow]], I've made significant headway in improving this function, which now works great. As it turns out, Emacs Lisp uses /dynamic binding/, which is something I still am not exactly accustomed to, since I'm more used to /lexical binding/. Thanks to [[http://stackoverflow.com/users/729907/drew][Drew]] for starting me off on that direction.
+
+In any case, [[http://stackoverflow.com/users/324105/phils][phils]]' suggestion to use =cl='s =lexical-let= instead of vanilla =let= works, so that's what I ended up using.
+
+In any case, I've simplified it so significantly now, by having a table containing =emacs-lisp-related-modes= above, and basically running through every emacs-related mode, to both set the code table and activate =prettify-symbols-mode=. I'm liking the end-result.
+
+#+begin_src emacs-lisp :var token=prettify-table[,0] code=prettify-table[,1] mode-name=emacs-lisp-related-modes[,0]
+  (when (require 'cl nil 'noerror)
+    (lexical-let ((pretty)
+                  (hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) mode-name)))
+      (setq pretty (pairlis token code))
+      (dolist (hook hooks)
+        (add-hook hook (lambda ()
+                         (setq prettify-symbols-alist pretty)
+                         (prettify-symbols-mode t))))))
+#+end_src
+
+*** UX-changing packages
+**** =rainbow-delimiters= Mode
 Too many parentheses and the like mess me up. Can't have that, hence, rainbow-delimiters-mode.
 
 Load rainbow-delim mode for both programming-modes and org-mode; mostly because org-mode has source-code blocks, and I'd like to be able to see paren matching in those blocks.
@@ -147,40 +221,15 @@ Load rainbow-delim mode for both programming-modes and org-mode; mostly because 
       (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
       (add-hook 'org-mode-hook #'rainbow-delimiters-mode)))
 #+end_src
-
-*** Custom org-faces & settings
-
-**** Mucking about with faces
-Some tweaks that don't involve color, just size, for org-mode. Also, enable syntax highlighting for blocks in org-mode. Tried that whole "colorize the =begin_src= =end_src= shit, didn't like it. Gave me eyestrain.
+**** Activate =powerline=
+From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
 
 #+begin_src emacs-lisp
-  (setq org-src-fontify-natively t)  
-  (custom-set-faces
-   '(org-document-title
-     ((t (:weight extra-bold :height 1.0)))))
+  (when (require 'powerline nil 'noerror)
+    (powerline-center-theme))
 #+end_src
 
-**** Org-mode custom settings
-Everything involving the most common settings for org-mode, here in the common file.
-
-#+BEGIN_SRC emacs-lisp
-  (custom-set-variables
-   ; values that normally go under the #+STARTUP (except where mentioned) header:
-   '(org-hide-leading-stars t)              ; hidestars
-   '(org-startup-indented t)                ; indent
-   '(org-log-done t)                        ; logdone
-   '(org-pretty-entities t)                 ; entitiespretty
-   '(org-export-with-sub-superscripts nil)) ; #+OPTIONS: ^:{}
-#+END_SRC
-
-*** =show-paren-mode=: Show Expressions, not just matching brackets.
-Oh my GOD. From ErgoEmacs' Xah Lee, [[http://ergoemacs.org/emacs/emacs_editing_lisp.html][this trick]]:
-
-#+BEGIN_SRC emacs-lisp
-  (setq show-paren-style 'expression)
-#+END_SRC
-
-*** =form-feed-mode= activated where I need it.
+**** =form-feed-mode= activated where I need it.
 Here's a table of modes that need =form-feed-mode=.
 
 #+name:modes-needing-form-feed-mode :colnames yes
@@ -209,66 +258,38 @@ I forsee that this will come very useful in the =prettify-symbols-mode= section.
           (add-hook hook 'form-feed-mode)))))
 #+END_SRC
 
-*** Make =org-bullet= install & load, put it in org-mode
+*** Changes to =org-mode=
+**** Custom org-faces & settings
+***** Mucking about with faces
+Some tweaks that don't involve color, just size, for org-mode. Also, enable syntax highlighting for blocks in org-mode. Tried that whole "colorize the =begin_src= =end_src= shit, didn't like it. Gave me eyestrain.
+
+#+begin_src emacs-lisp
+  (setq org-src-fontify-natively t)  
+  (custom-set-faces
+   '(org-document-title
+     ((t (:weight extra-bold :height 1.0)))))
+#+end_src
+
+***** Org-mode custom settings
+Everything involving the most common settings for org-mode, here in the common file.
+
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   ; values that normally go under the #+STARTUP (except where mentioned) header:
+   '(org-hide-leading-stars t)              ; hidestars
+   '(org-startup-indented t)                ; indent
+   '(org-log-done t)                        ; logdone
+   '(org-pretty-entities t)                 ; entitiespretty
+   '(org-export-with-sub-superscripts nil)) ; #+OPTIONS: ^:{}
+#+END_SRC
+
+**** Make =org-bullet= install & load, put it in org-mode
 Can't think of a reason why not. Why not?
 
 #+BEGIN_SRC emacs-lisp
   (when (require 'org-bullets nil 'noerror)
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
-
-*** Activate =powerline=
-From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
-
-#+begin_src emacs-lisp
-  (when (require 'powerline nil 'noerror)
-    (powerline-center-theme))
-#+end_src
-
-*** Define =prettify-symbols-alist= for =elisp-mode= and other-related modes
-Really it's for *a e s t h e t i c* reasons, hahaha.
-
-Anyway, because it'd probably be easier for myself, I'll just use the table format and work on it that way, since it's an alist, right? No harm in that.
-
-Although at the rate this is going I /might/ just want to put the whole table-into-alist thing as a common function.
-
-#+NAME:prettify-table :colnames yes
-| token    | code |
-|----------+------|
-| "not"    |  172 |
-| "*"      |  215 |
-| "/"      |  247 |
-| "->"     | 8594 |
-| "map"    | 8614 |
-| "/="     | 8800 |
-| "<="     | 8804 |
-| ">="     | 8805 |
-| "lambda" |  955 |
-
-Thanks to [[http://stackoverflow.com/questions/32878675/using-elisp-local-variables-instead-of-global-variables-to-add-a-function-into-a][this conversation on StackOverflow]], I've had some headway in improving this function, which now broadly works. As it turns out, Emacs Lisp uses /dynamic binding/, which is something I still am not exactly accustomed to, since I'm more used to /lexical binding/. Thanks to [[http://stackoverflow.com/users/729907/drew][Drew]] for starting me off on that direction.
-
-In any case, [[http://stackoverflow.com/users/324105/phils][phils]]' suggestion to use =cl='s =lexical-let= instead of vanilla =let= works, so I'm keeping it at this state right now. If the conversation evolves a little more I'll see what more I can do with that.
-
-Another next step would be to see if I can refactor the whole thing into something less repetitive, since right now I'm using it for both =lisp-interaction-mode= and =emacs-lisp-mode=. 
-
-Ideally maybe just something that takes in a list of modes or hooks, and then for each one of those hooks, sets the =prettify-symbols-alist= to the above =prettify-table=, and activates =prettify-symbols-mode=. 
-
-Maybe even after that, work on it some more so that it'll take different token and code tables, and then repeat it for different languages. That'll be neat.
-
-#+begin_src emacs-lisp :var token=prettify-table[,0] code=prettify-table[,1]
-  (require 'cl)
-
-  (lexical-let (pretty)
-    (setq pretty (pairlis token code))
-    (add-hook 'lisp-interaction-mode-hook
-              (lambda ()
-                (setq prettify-symbols-alist pretty)
-                (prettify-symbols-mode 1)))
-    (add-hook 'emacs-lisp-mode-hook
-              (lambda ()
-                (setq prettify-symbols-alist pretty)
-                (prettify-symbols-mode 1))))
-#+end_src
 
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.

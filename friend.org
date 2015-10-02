@@ -255,9 +255,9 @@ Based on [[http://www.lonecpluspluscoder.com/2014/11/using-elpa-pinned-packages-
 
 #+begin_src emacs-lisp
   (when (boundp 'package-pinned-packages)
-    (add-to-list package-pinned-packages
+    (add-to-list 'package-pinned-packages
                  '(coffee-mode . "MELPA-stable")))
-  (package-initialize t)
+  (package-initialize)
   (starter-kit-install-if-needed 'coffee-mode)
 #+end_src
 
