@@ -55,7 +55,7 @@ The goals of these settings is to:
 - Minimize eye strain.
 
 ** Custom faces
-Use the font that is available for the syste2m.
+Use the font that is available for the system.
 
 #+begin_src emacs-lisp
 (custom-set-faces
@@ -79,6 +79,27 @@ Basically, let's keep it transparent, and let's put in a color scheme.
 ** Stuff for development
 Since I'm using this computer to develop projects, here are some language-specific settings for specific packages.
 
+*** Org-mode
+
+Some custom settings for this desktop computer, since I'm more likely to run code blocks here than on other computers (for now):
+
+#+name: languages-to-run-in-org
+| languages  |
+|------------|
+| sh         |
+| emacs-lisp |
+
+Again, use the same old trick that we've used before:
+
+#+begin_src emacs-lisp :var languages=languages-to-run-in-org[,0]
+  (when (require 'org nil 'noerror)
+    (when (require 'cl nil 'noerror)
+      (let ((langs (mapcar #'intern languages)))
+        (org-babel-do-load-languages
+         'org-babel-load-languages
+         (pairlis langs (make-list (length langs) t))))))
+#+end_src
+
 *** Python
 Code for Python.
 
@@ -88,6 +109,7 @@ Code for Python.
 #+BEGIN_SRC emacs-lisp
   (starter-kit-load "python")
 #+END_SRC
+
 **** Enable =elpy-mode= and add =elpy= repository.
 Basically, enable =elpy=.
 
@@ -98,16 +120,6 @@ The source for this comes from the [[https://github.com/jorgenschaefer/elpy][elp
     (progn
       (when (require 'elpy nil 'noerror)
         (elpy-enable))))
-#+end_src
-
-**** Including =form-feed-mode= for =python-mode=
-And now, since ^L is allowed thanks to PEP-8, including form-feed mode to the Python-developing mode I most frequent. 
-
-This isn't added into the list of modes requiring =form-feed-mode= because so far only this machine uses =python-mode=.
-
-#+begin_src emacs-lisp
-  (when (require 'form-feed nil 'noerror)
-    (add-hook 'python-mode-hook form-feed-mode))
 #+end_src
 
 **** Enabling =whitespace-mode= for python editing, and automatic =whitespace-cleanup=.
@@ -149,7 +161,7 @@ Right now it's just settings for putting in documentation for the latest version
 Well, this is for posterity's sake, but this set of instructions:
 
 1. Installs the info documentation for =python= 2.7.3 (which is what Crunchbang Waldorf / Debian Wheezy uses).
-   - TODO :: install documentation for =python= 2.7.9, which is what Debian Jessie uses.
+   - DONE (on [2015-10-04 Sun 00:41]) :: install documentation for =python= 2.7.9, which is what Debian Jessie uses.
 2. Installs the info documentation for =pygame= development branch, dated <2015-02-15 Sun 15:26>.
 
 What this requires:
@@ -173,13 +185,13 @@ What this requires:
   # install latest sphinx dev version...
   pip install https://bitbucket.org/jonwaltman/sphinx-info/get/51850bb9b7a1.zip
 
-  # download and untar required python release (2.7.3)
+  # download and untar required python release (2.7.9)
 
-  wget https://www.python.org/ftp/python/2.7.3/Python-2.7.3.tar.bz2
-  tar xf Python-2.7.3.tar.bz2
+  wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tar.bz2
+  tar xf Python-2.7.9.tar.bz2
 
   # Move to the source documentation, and prepare the conf.py file
-  cd Python-2.7.3/Doc
+  cd Python-2.7.9/Doc
   cat <<HABIS_DAH_YEY >> conf.py
 
   texinfo_documents = [
@@ -231,6 +243,52 @@ What this requires:
   cd ~
   rm -rf /tmp/python-pygame-docs
 #+end_src
+
+Update for [2015-10-03 Sat 16:10]:
+
+Upgrading to Python 2.7.9 is as follows:
+
+#+begin_src sh :tangle no
+  #!/bin/bash
+
+  cd /tmp  # do the installation in the tmp directory.
+  mkdir python-pygame-docs
+  virtualenv python-pygame-docs/ # create the python virtual environment
+  cd python-pygame-docs/
+
+  # activate the virtual environment; now nothing touches the main system
+  . bin/activate 
+
+  # install latest sphinx dev version...
+  pip install https://bitbucket.org/jonwaltman/sphinx-info/get/51850bb9b7a1.zip
+
+  # download and untar required python release (2.7.9)
+
+  wget -t 0 https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tar.xz
+  tar xf Python-2.7.9.tar.xz
+
+  # Move to the source documentation, and prepare the conf.py file
+  cd Python-2.7.9/Doc
+  cat <<HABIS_DAH_YEY >> conf.py
+
+  texinfo_documents = [
+      ('contents', 'python', 'Python Documentation', _stdauthor,
+       'Python', 'The Python Documentation', 'Software Development'),
+  ]
+
+  HABIS_DAH_YEY
+
+  # Uninstall the old Info file, generate the new Texinfo file, build the Info files and install it:
+  mkdir -p build/texinfo build/doctrees
+  sphinx-build -b texinfo -d build/doctrees . build/texinfo
+  cd build/texinfo
+  makeinfo --no-split python.texi
+  sudo ginstall-info --remove --info-dir=/usr/share/info --info-file=python.info
+  sudo cp python.info /usr/share/info
+  sudo ginstall-info --info-dir=/usr/share/info --info-file=python.info
+#+end_src
+
+#+RESULTS:
 
 *** Javascript
 Code for Javascript

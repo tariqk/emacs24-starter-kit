@@ -149,8 +149,8 @@ As defined here, these are the modes that are related to Emacs Lisp:
 | mode-name             |
 |-----------------------|
 | emacs-lisp-mode       |
-| lisp-interaction-mode |
 | ielm-mode             |
+| lisp-interaction-mode |
 
 This table is used in the following manner:
 
@@ -183,12 +183,12 @@ Anyway, because it'd probably be easier for myself, I'll just use the table form
 | "not"    |  172 |
 | "*"      |  215 |
 | "/"      |  247 |
+| "lambda" |  955 |
 | "->"     | 8594 |
 | "map"    | 8614 |
 | "/="     | 8800 |
 | "<="     | 8804 |
 | ">="     | 8805 |
-| "lambda" |  955 |
 
 Thanks to [[http://stackoverflow.com/questions/32878675/using-elisp-local-variables-instead-of-global-variables-to-add-a-function-into-a][this conversation on StackOverflow]], I've made significant headway in improving this function, which now works great. As it turns out, Emacs Lisp uses /dynamic binding/, which is something I still am not exactly accustomed to, since I'm more used to /lexical binding/. Thanks to [[http://stackoverflow.com/users/729907/drew][Drew]] for starting me off on that direction.
 
@@ -233,10 +233,11 @@ Here's a table of modes that need =form-feed-mode=.
 #+name:modes-needing-form-feed-mode :colnames yes
 | modes            |
 |------------------|
-| text-mode        |
-| help-mode        |
-| emacs-lisp-mode  |
 | compilation-mode |
+| emacs-lisp-mode  |
+| form-feed-mode   |
+| help-mode        |
+| text-mode        |
 
 This puts together several tricks I've learned during working on this file: 
 
