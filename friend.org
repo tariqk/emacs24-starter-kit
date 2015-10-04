@@ -144,7 +144,7 @@ And after that, allow emacs to cleanup whitespace after you modify a file, at le
         (if (not modified-before-p)
             (not-modified))))
     (add-hook 'python-mode-hook (lambda ()
-                                  (add-hook 'write-contents-hooks whitespace-cleanup+))))
+                                  (add-hook 'write-contents-hooks #'whitespace-cleanup+))))
 #+end_src
 
 **** =pygame=-specific settings.
@@ -303,10 +303,10 @@ Add the necessary hooks to load when loading JavaScript files. As stated in the 
 
 #+begin_src emacs-lisp
   (when (require 'js2-minor-mode nil 'noerror)
-    (add-hook 'js-mode-hook js2-minor-mode)
+    (add-hook 'js-mode-hook #'js2-minor-mode)
     (setq js2-highlight-level 3)
     (when (require 'ac-js2-mode nil 'noerror)
-      (add-hook 'js2-mode-hook ac-js2-mode)))
+      (add-hook 'js2-mode-hook #'ac-js2-mode)))
 #+end_src
 
 *** CoffeeScript

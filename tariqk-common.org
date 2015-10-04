@@ -5,7 +5,7 @@ This is part of Tariq Kamal's common emacs configuration, with options that rema
 
 This is supposed to be used with [[https://github.com/eschulte/emacs24-starter-kit/][The Literate Programming Fork of the Emacs24 Starter Kit]], and called from $hostname.org via the following, somewhere in the top of the file:
 
-#+begin_example 
+#+begin_example
 (org-babel-load-file "tariqk-common.org")
 #+end_example
 
@@ -59,7 +59,7 @@ Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extr
 | MELPA-stable | http://stable.melpa.org/packages/         |
 | original     | http://tromey.com/elpa/                   |
 
-And then, using this, you can incorporate it, /sort of cleanly/, with this: 
+And then, using this, you can incorporate it, /sort of cleanly/, with this:
 
 #+begin_src emacs-lisp :var label=repository-names[,0] URI=repository-names[,1]
   (when (require 'package nil 'noerror)
@@ -109,7 +109,7 @@ How things appear on your emacs screen.
 
 *** Interface changes that don't need new packages
 **** CUA-mode
-So I grew up on Windows systems. 
+So I grew up on Windows systems.
 
 While I do get /some/ of the terminology (i.e. C-k means cut everything between the cursor to EOL and put it into the kill-ring, C-y means paste the last entry from the kill-ring onto the document), I use too many Windows tools to allow me to mentally switch gears every time I change machines. So CUA-mode it is.
 
@@ -133,7 +133,7 @@ Takes up space only. What a waste, especially on the netbook.
 #+end_src
 
 **** Visual-line-mode
-I can't /stand/ having to muck around with linewraps while I'm writing. It's fucking annoying. So, instead, I shall use visual-line-mode.
+xI can't /stand/ having to muck around with linewraps while I'm writing. It's fucking annoying. So, instead, I shall use visual-line-mode.
 
 Of course, since this annoyance really only comes during writing, and not coding, we shall only put it on in text modes. Sounds fair? Hope so.
 
@@ -145,12 +145,10 @@ Of course, since this annoyance really only comes during writing, and not coding
 **** Changes to modes related to Emacs Lisp
 As defined here, these are the modes that are related to Emacs Lisp:
 
-#+name: emacs-lisp-related-modes :colnames yes
-| mode-name             |
-|-----------------------|
-| emacs-lisp-mode       |
-| ielm-mode             |
-| lisp-interaction-mode |
+#+name: emacs-lisp-related-modes
+- emacs-lisp-mode
+- ielm-mode
+- lisp-interaction-mode
 
 This table is used in the following manner:
 
@@ -165,9 +163,9 @@ First, [[http://emacswiki.org/emacs/ElDoc][based on this suggestion]], highlight
 
 And then, activate =eldoc-mode=:
 
-#+begin_src emacs-lisp :var mode-name=emacs-lisp-related-modes[,0]
+#+begin_src emacs-lisp :var modes=emacs-lisp-related-modes
   (when (require 'cl nil 'noerror)
-    (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) mode-name)))
+    (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) modes)))
       (dolist (hook hooks)
         (add-hook hook 'turn-on-eldoc-mode))))
 #+end_src
@@ -211,13 +209,21 @@ In any case, I've simplified it so significantly now, by having a table containi
 **** =rainbow-delimiters= Mode
 Too many parentheses and the like mess me up. Can't have that, hence, rainbow-delimiters-mode.
 
-Load rainbow-delim mode for both programming-modes and org-mode; mostly because org-mode has source-code blocks, and I'd like to be able to see paren matching in those blocks.
+Here's a list of modes that need =rainbow-delimiters-mode=:
 
-#+begin_src emacs-lisp
+#+name:modes-that-need-rainbow-delimiters
+- ielm-mode
+- org-mode
+- prog-mode
+
+Load =rainbow-delimiters-mode= for the above modes:
+
+#+begin_src emacs-lisp :var modes=modes-that-need-rainbow-delimiters
   (when (require 'rainbow-delimiters nil 'noerror)
-    (progn
-      (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-      (add-hook 'org-mode-hook #'rainbow-delimiters-mode)))
+    (when (require 'cl nil 'noerror)
+      (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) modes)))
+        (dolist (hook hooks)
+          (add-hook hook #'rainbow-delimiters-mode)))))
 #+end_src
 **** Activate =powerline=
 From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
@@ -230,16 +236,12 @@ From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
 **** =form-feed-mode= activated where I need it.
 Here's a table of modes that need =form-feed-mode=.
 
-#+name:modes-needing-form-feed-mode :colnames yes
-| modes            |
-|------------------|
-| compilation-mode |
-| emacs-lisp-mode  |
-| form-feed-mode   |
-| help-mode        |
-| text-mode        |
+#+name:modes-needing-form-feed-mode
+- compilation-mode
+- emacs-lisp-mode
+- help-mode
 
-This puts together several tricks I've learned during working on this file: 
+This puts together several tricks I've learned during working on this file:
 
 1. using =lexical-let= to use lexical binding in the section that needs it
 2. using =mapcar= to modify the list of items in place:
@@ -249,12 +251,12 @@ This puts together several tricks I've learned during working on this file:
 
 I forsee that this will come very useful in the =prettify-symbols-mode= section.
 
-#+BEGIN_SRC emacs-lisp :var modes=modes-needing-form-feed-mode[,0]
+#+BEGIN_SRC emacs-lisp :var modes=modes-needing-form-feed-mode
   (when (require 'form-feed nil 'noerror)
     (when (require 'cl nil 'noerror)
       (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) modes)))
         (dolist (hook hooks)
-          (add-hook hook 'form-feed-mode)))))
+          (add-hook hook #'form-feed-mode)))))
 #+END_SRC
 
 *** Changes to =org-mode=
@@ -263,7 +265,7 @@ I forsee that this will come very useful in the =prettify-symbols-mode= section.
 Some tweaks that don't involve color, just size, for org-mode. Also, enable syntax highlighting for blocks in org-mode. Tried that whole "colorize the =begin_src= =end_src= shit, didn't like it. Gave me eyestrain.
 
 #+begin_src emacs-lisp
-  (setq org-src-fontify-natively t)  
+  (setq org-src-fontify-natively t)
   (custom-set-faces
    '(org-document-title
      ((t (:weight extra-bold :height 1.0)))))
