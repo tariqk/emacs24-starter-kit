@@ -281,6 +281,7 @@ Everything involving the most common settings for org-mode, here in the common f
    '(org-startup-indented t)                ; indent
    '(org-log-done t)                        ; logdone
    '(org-pretty-entities t)                 ; entitiespretty
+   '(org-startup-folded 'content)           ; #+STARTUP: content
    '(org-export-with-sub-superscripts nil)) ; #+OPTIONS: ^:{}
 #+END_SRC
 
