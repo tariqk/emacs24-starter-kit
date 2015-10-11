@@ -28,7 +28,6 @@ Before starting, though, perform this action, because =friend.org= invokes the =
 #+end_src
 
 ** Common functions
-
 Functions used on different environments.
 
 *** The transparent window hack
@@ -40,6 +39,69 @@ Considering how commonly this function is used across graphical GUIs, and how lo
     (interactive "nAlpha level (0-100): \nnNo focus alpha level (0-100): ")
     (set-frame-parameter (selected-frame) 'alpha (list alpha-level no-focus-alpha-level))
     (add-to-list 'default-frame-alist `(alpha ,alpha-level)))
+#+end_src
+
+*** Compact and uncompact regions (un-fill region)
+This was incredibly useful, and it's surprising that Emacs doesn't have this as a default. [[http://ergoemacs.org/emacs/modernization_fill-paragraph.html][Source]].
+
+#+begin_src emacs-lisp
+  (defun *hx-compact-uncompact-block ()
+    "Remove or add line ending chars on current paragraph.
+  This command is similar to a toggle of `fill-paragraph'.
+  When there is a text selection, act on the region."
+    (interactive)
+
+    ;; This command symbol has a property “'stateIsCompact-p”.
+    (let (currentStateIsCompact (bigFillColumnVal most-positive-fixnum) (deactivate-mark nil))
+
+      (save-excursion
+        ;; Determine whether the text is currently compact.
+        (setq currentStateIsCompact
+              (if (eq last-command this-command)
+                  (get this-command 'stateIsCompact-p)
+                (if (> (- (line-end-position) (line-beginning-position)) fill-column) t nil) ) )
+
+        (if (use-region-p)
+            (if currentStateIsCompact
+                (fill-region (region-beginning) (region-end))
+              (let ((fill-column bigFillColumnVal))
+                (fill-region (region-beginning) (region-end))) )
+          (if currentStateIsCompact
+              (fill-paragraph nil)
+            (let ((fill-column bigFillColumnVal))
+              (fill-paragraph nil)) ) )
+
+        (put this-command 'stateIsCompact-p (if currentStateIsCompact nil t)) ) ) )
+#+end_src
+*** Toggle between UPPER-CASE, lower-case and Initial-Case.
+More stuff from Xah Lee, which looks really promising. [[http://ergoemacs.org/emacs/modernization_upcase-word.html][Source]].
+
+#+begin_src emacs-lisp
+  (defun *hx-toggle-letter-case (φp1 φp2)
+    "Toggle the letter case of current word or text selection.
+  Always cycle in this order: Init Caps, ALL CAPS, all lower.
+
+  In lisp code, φp1 φp2 are region boundary.
+  URL `http://ergoemacs.org/emacs/modernization_upcase-word.html'
+  Version 2015-04-09"
+    (interactive
+     (if (use-region-p)
+         (list (region-beginning) (region-end))
+       (let ((ξbds (bounds-of-thing-at-point 'word)))
+         (list (car ξbds) (cdr ξbds)))))
+    (let ((deactivate-mark nil))
+      (when (not (eq last-command this-command))
+        (put this-command 'state 0))
+      (cond
+       ((equal 0 (get this-command 'state))
+        (upcase-initials-region φp1 φp2)
+        (put this-command 'state 1))
+       ((equal 1  (get this-command 'state))
+        (upcase-region φp1 φp2)
+        (put this-command 'state 2))
+       ((equal 2 (get this-command 'state))
+        (downcase-region φp1 φp2)
+        (put this-command 'state 0)))))
 #+end_src
 
 ** Backend Stuff
