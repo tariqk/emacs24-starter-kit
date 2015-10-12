@@ -102,6 +102,8 @@ More stuff from Xah Lee, which looks really promising. [[http://ergoemacs.org/em
        ((equal 2 (get this-command 'state))
         (downcase-region φp1 φp2)
         (put this-command 'state 0)))))
+
+  (global-set-key (kbd "s-/") '*hx-toggle-letter-case)
 #+end_src
 
 ** Backend Stuff
