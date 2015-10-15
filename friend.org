@@ -30,6 +30,8 @@ But that's for what's common in all machines. These are the packages that need t
 | js2-mode              | MELPA-stable |
 | pandoc-mode           | MELPA-stable |
 | pydoc-info            | MELPA        |
+| docker                | MELPA        |
+| dockerfile-mode       | MELPA-stable |
 
 And now, to do what we did in =tariqk-common=: add /these/ package-pinning options, and then install them if they don't exist:
 
