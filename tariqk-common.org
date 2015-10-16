@@ -163,14 +163,15 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 #+NAME: package-settings :colnames yes
 | name               | repository   |
 |--------------------+--------------|
+| color-theme        | MELPA        |
 | dired+             | MELPA        |
 | form-feed          | MELPA-stable |
 | org-bullets        | MELPA-stable |
 | org-plus-contrib   | org          |
 | powerline          | MELPA-stable |
 | rainbow-delimiters | MELPA-stable |
+| undo-tree          | MELPA        |
 | yasnippet          | MELPA-stable |
-| color-theme        | MELPA        |
 
 And do basically two things: set the package-pinning options, and then install the packages if they don't exist.
 
@@ -341,6 +342,20 @@ I forsee that this will come very useful in the =prettify-symbols-mode= section.
         (dolist (hook hooks)
           (add-hook hook #'form-feed-mode)))))
 #+END_SRC
+
+**** =undo-tree= mode.
+Thanks to recommendations from the esteemable [[http://pages.sachachua.com/.emacs.d/Sacha.html#unnumbered-20][Sacha Chua]] and [[http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/][Pragmatic Emacs]], I'm installing =undo-tree=, using Sacha's recommended settings and PrEmacs' alias. Rather than use PrEmacs' or Sacha's recommended settings, though, I'm /finally/ unbinding =C-y= and using that for =redo=.
+
+#+begin_src emacs-lisp 
+  (when (require 'undo-tree nil 'noerror)
+    (progn
+      (global-undo-tree-mode 1)
+      (setq undo-tree-visualizer-timestamps t)
+      (setq undo-tree-visualizer-diff t)
+      (defalias 'redo 'undo-tree-redo)
+      (global-unset-key (kbd "C-y")) ; Because it's tied to yank now, screw that.
+      (global-set-key (kbd "C-y") 'redo)))
+#+end_src
 
 *** Changes to =org-mode=
 **** Custom org-faces & settings
