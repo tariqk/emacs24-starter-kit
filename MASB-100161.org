@@ -1,3 +1,4 @@
+
 #+TITLE: Configuration Specific To Mesiniaga's Lenovo Thinkpad E420
 #+STARTUP: indent hidestars
 #+OPTIONS: toc:nil num:nil ^:nil
@@ -12,6 +13,30 @@ Anyway, as with all hostname-specific machines, this little fella runs the follo
 #+begin_src emacs-lisp
 (org-babel-load-file (expand-file-name "tariqk-common.org" starter-kit-dir))
 #+end_src
+
+* Download some pre-requisites
+Now, the common-files should have done the following:
+
+- Loaded the compulsory modules that are common to all machines
+- Populated the =package-pinned-packages= variables.
+
+But that's for what's common in all machines. These are the packages that need to be installed on friend desktop:
+
+#+NAME: package-settings :colnames yes
+| name       | repository |
+|------------+------------|
+| everything | marmalade  |
+
+#+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1]
+  (when (require 'package nil 'noerror)
+    (when (require 'cl nil 'noerror)
+      (lexical-let ((pkgs (mapcar #'intern name))
+                    (original))
+        (setq original package-pinned-packages)
+        (setq package-pinned-packages (append original (pairlis pkgs repository)))
+        (apply 'starter-kit-install-if-needed pkgs))
+        (package-initialize)))
+#+end_src  
 
 * What goes in here
 Settings for emacs specific to a laptop , running Windows 7, Enterprise Edition.
@@ -41,10 +66,11 @@ Of course, there are a whole bunch of little quirks that emacs for w32 has. When
 #+BEGIN_SRC emacs-lisp :noweb yes
 (custom-set-variables
 <<quirks-custom-variables-flyspell>>
+<<quirks-custom-variables-everything>>
 )
 #+END_SRC
 
-**** Fixing flyspell on Windows.
+**** Fixing =flyspell= on Windows.
 =flyspell= don't work normally with this variant of emacs, so we need to install it into the system and get Windows to link it here.
 
 #+NAME: quirks-custom-variables-flyspell
@@ -52,12 +78,19 @@ Of course, there are a whole bunch of little quirks that emacs for w32 has. When
    '(ispell-dictionary "british")
    '(ispell-program-name "C:\\Program Files \(x86\)\\Aspell\\bin\\aspell.exe")
 #+END_SRC
-**** Fixing the default directory for find-file
+**** Fixing the default directory for =find-file=
 So it turns out that the default directory for =find-file= is somewhere in the emacs application directory. How annoying! Let's fix that.
 
 #+BEGIN_SRC emacs-lisp
   (setq default-directory "~")
 #+END_SRC
+**** Pointing =everything= to the right executable
+The original =es.exe= file location is hard-coded, and /egregiously/ wrong in this current setup. Here's where it should be:
+
+#+NAME: quirks-custom-variables-everything
+#+begin_src emacs-lisp
+  '(everything-cmd "C:\\Program Files \(x86\)\\Everything\\es.exe")
+#+end_src
 
 ** Window Setup The Way I Like It (Here)
 Basically, let's keep it transparent, and let's put in a color scheme. We'll do the color scheme after everything is sorted out.

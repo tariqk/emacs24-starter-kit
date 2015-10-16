@@ -105,7 +105,26 @@ More stuff from Xah Lee, which looks really promising. [[http://ergoemacs.org/em
 
   (global-set-key (kbd "s-/") '*hx-toggle-letter-case)
 #+end_src
+*** Close all parenthesis
+From [[http://emacs.stackexchange.com/a/915][this Emacs Stack Exchange answer]]:
 
+#+begin_src emacs-lisp
+(defun *hx-close-all-parentheses ()
+  (interactive "*")
+  (let ((closing nil))
+    (save-excursion
+      (while (condition-case nil
+         (progn
+           (backward-up-list)
+           (let ((syntax (syntax-after (point))))
+             (case (car syntax)
+               ((4) (setq closing (cons (cdr syntax) closing)))
+               ((7 8) (setq closing (cons (char-after (point)) closing)))))
+           t)
+           ((scan-error) nil))))
+    (apply #'insert (nreverse closing))))
+(global-set-key (kbd "C-)") '*hx-close-all-parentheses)
+#+end_src
 ** Backend Stuff
 How things work in the background.
 
@@ -222,7 +241,7 @@ First, [[http://emacswiki.org/emacs/ElDoc][based on this suggestion]], highlight
 #+begin_src emacs-lisp
   (setq eldoc-argument-case '(lambda (arg)
                                (propertize (upcase arg)
-                                           'face 'font-lock-variable-face)))
+                                           'face 'font-lock-variable-name-face)))
 #+end_src
 
 And then, activate =eldoc-mode=:
