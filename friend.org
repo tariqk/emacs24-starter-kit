@@ -27,6 +27,7 @@ But that's for what's common in all machines. These are the packages that need t
 | color-theme-solarized | MELPA        |
 | cython-mode           | MELPA-stable |
 | docker                | MELPA        |
+| docker-tramp          | MELPA        |
 | dockerfile-mode       | MELPA-stable |
 | elpy                  | elpy         |
 | js2-mode              | MELPA-stable |
