@@ -26,6 +26,7 @@ But that's for what's common in all machines. These are the packages that need t
 | name       | repository |
 |------------+------------|
 | everything | marmalade  |
+| ssh-agency | MELPA      |
 
 #+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1]
   (when (require 'package nil 'noerror)
@@ -92,11 +93,18 @@ The original =es.exe= file location is hard-coded, and /egregiously/ wrong in th
   '(everything-cmd "C:\\Program Files \(x86\)\\Everything\\es.exe")
 #+end_src
 **** Allowing =magit= to work properly
-So, based on this solution, we need to locate =git= manually for =magit= to work. Therefore:
+So, based on [[http://emacs.stackexchange.com/questions/177/magit-on-windows-searching-for-program-permission-denied-git][this solution]], we need to locate =git= manually for =magit= to work. Therefore:
 
 #+begin_src emacs-lisp
   (add-to-list 'exec-path "C:/Program Files/Git/bin")
 #+end_src
+
+And, as a first step to solve the whole =git= failing in general to push, from [[https://github.com/magit/magit/wiki/Pushing-with-Magit-from-Windows][here]]:
+#+begin_src emacs-lisp
+  (setenv "SSH_ASKPASS" "git-gui--askpass")
+#+end_src
+
+Additional note: no, it didn't work, so I'm using [[https://help.github.com/articles/generating-ssh-keys/][this solution]]. Step 3 doesn't work, so I ended up using =eval $(ssh-agent)= instead and that works, based on [[http://stackoverflow.com/a/21909432][this answer]].
 ** Window Setup The Way I Like It (Here)
 Basically, let's keep it transparent, and let's put in a color scheme. We'll do the color scheme after everything is sorted out.
 
