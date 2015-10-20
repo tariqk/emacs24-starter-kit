@@ -91,7 +91,12 @@ The original =es.exe= file location is hard-coded, and /egregiously/ wrong in th
 #+begin_src emacs-lisp
   '(everything-cmd "C:\\Program Files \(x86\)\\Everything\\es.exe")
 #+end_src
+**** Allowing =magit= to work properly
+So, based on this solution, we need to locate =git= manually for =magit= to work. Therefore:
 
+#+begin_src emacs-lisp
+  (add-to-list 'exec-path "C:/Program Files/Git/bin")
+#+end_src
 ** Window Setup The Way I Like It (Here)
 Basically, let's keep it transparent, and let's put in a color scheme. We'll do the color scheme after everything is sorted out.
 
