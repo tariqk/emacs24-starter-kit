@@ -1,6 +1,7 @@
 #+TITLE: Configuration Specific To Tariq's HP Pavilion Desktop.
 #+STARTUP: indent hidestars
 #+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :results silent :colnames yes
 
 So this is basically the configuration file for friend, the HP Pavilion Desktop running Debian Jessie, formally Crunchbang Waldorf. Dual-screen monitor setup.
 
@@ -19,7 +20,7 @@ Now, the common-files should have done the following:
 
 But that's for what's common in all machines. These are the packages that need to be installed on friend desktop:
 
-#+NAME: package-settings :colnames yes
+#+NAME: package-settings 
 | name                  | repository   |
 |-----------------------+--------------|
 | ac-js2                | MELPA-stable |

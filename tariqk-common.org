@@ -1,5 +1,6 @@
 #+TITLE: Common Options for Emacs Starter Kit for Tariq Kamal (tariqk)
 #+OPTIONS: toc:nil num:nil ^:nil
+#+PROPERTY: header-args :results silent :colnames yes
 
 This is part of Tariq Kamal's common emacs configuration, with options that remain true no matter what device he's on.
 
@@ -131,7 +132,7 @@ How things work in the background.
 *** Package Management Locations
 Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
 
-#+NAME: repository-names :colnames yes
+#+NAME: repository-names
 | label        | URI                                       |
 |--------------+-------------------------------------------|
 | GNU          | http://elpa.gnu.org/packages/             |
@@ -160,7 +161,7 @@ Or everything would break and you'd have to go back to the last commit, but hey.
 
 Here are the list of packages that /must/ be installed on /all/ Emacs instances I control, along with the apt-pinning preferences.
 
-#+NAME: package-settings :colnames yes
+#+NAME: package-settings 
 | name               | repository   |
 |--------------------+--------------|
 | color-theme        | MELPA        |
@@ -198,7 +199,7 @@ So I grew up on Windows systems.
 While I do get /some/ of the terminology (i.e. C-k means cut everything between the cursor to EOL and put it into the kill-ring, C-y means paste the last entry from the kill-ring onto the document), I use too many Windows tools to allow me to mentally switch gears every time I change machines. So CUA-mode it is.
 
 #+begin_src emacs-lisp
-(cua-mode)
+(cua-mode t)
 #+end_src
 
 **** =show-paren-mode=: Show Expressions, not just matching brackets.
@@ -259,7 +260,7 @@ Really it's for *a e s t h e t i c* reasons, hahaha.
 
 Anyway, because it'd probably be easier for myself, I'll just use the table format and work on it that way, since it's an alist, right? No harm in that.
 
-#+NAME:prettify-table :colnames yes
+#+NAME:prettify-table 
 | token    | code |
 |----------+------|
 | "not"    |  172 |
