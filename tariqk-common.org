@@ -189,7 +189,7 @@ Rather than using their suggestion of manually using =package-install=, however,
 #+end_src
 
 ** Interface
-How things appear on your emacs screen.
+Settings for Emacs user interfaces, which include appearances and custom keybindings.
 
 *** Interface changes that don't need new packages
 **** CUA-mode
@@ -391,6 +391,22 @@ Can't think of a reason why not. Why not?
   (when (require 'org-bullets nil 'noerror)
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+END_SRC
+**** New =org-structure-template-alist=
+Obviously the way I would like to do it is to put in a table, as such:
+
+#+name:shortcuts-alist
+| key | value      |
+|-----+------------|
+| n   | #+NAME:?   |
+
+#+BEGIN_SRC emacs-lisp :var key=shortcuts-alist[,0] value=shortcuts-alist[,1] :results none
+(when (require 'org nil 'noerror)
+  (when (require 'cl nil 'noerror)
+    (lexical-let ((sequences (mapcar* #'list key value))
+                  (original))
+      (setq original org-structure-template-alist)
+      (setq org-structure-template-alist (append original sequences)))))
+#+END_SRC
 
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
@@ -399,3 +415,4 @@ I can't believe I never included this in the first place. In any case, activatin
   (starter-kit-load "org")
   (starter-kit-load "yasnippet")
 #+end_src
+
