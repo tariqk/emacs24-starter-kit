@@ -32,6 +32,7 @@ But that's for what's common in all machines. These are the packages that need t
 | dockerfile-mode       | MELPA-stable |
 | elpy                  | elpy         |
 | js2-mode              | MELPA-stable |
+| json-mode             | MELPA-stable |
 | pandoc-mode           | MELPA-stable |
 | pydoc-info            | MELPA        |
 
