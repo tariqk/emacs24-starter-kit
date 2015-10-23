@@ -171,6 +171,7 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 | org-plus-contrib   | org          |
 | powerline          | MELPA-stable |
 | rainbow-delimiters | MELPA-stable |
+| sx                 | MELPA-stable |
 | undo-tree          | MELPA        |
 | yasnippet          | MELPA-stable |
 
