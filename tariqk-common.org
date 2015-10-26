@@ -382,8 +382,7 @@ Everything involving the most common settings for org-mode, here in the common f
    '(org-log-done t)                        ; logdone
    '(org-pretty-entities t)                 ; entitiespretty
    '(org-startup-folded 'content)           ; #+STARTUP: content
-   '(org-export-with-sub-superscripts nil)
-   '(org-src-preserve-indentation t)) ; #+OPTIONS: ^:{}
+   '(org-export-with-sub-superscripts nil)) ; #+OPTIONS: ^:{}
 #+END_SRC
 
 **** Make =org-bullet= install & load, put it in org-mode
