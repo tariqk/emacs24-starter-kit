@@ -1,6 +1,6 @@
 #+TITLE: Common Options for Emacs Starter Kit for Tariq Kamal (tariqk)
 #+OPTIONS: toc:nil num:nil ^:nil
-#+PROPERTY: header-args :results silent :colnames yes
+#+PROPERTY: header-args :results silent
 
 This is part of Tariq Kamal's common emacs configuration, with options that remain true no matter what device he's on.
 
@@ -132,7 +132,7 @@ How things work in the background.
 *** Package Management Locations
 Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
 
-#+NAME: repository-names
+#+NAME: repository-names :colnames yes
 | label        | URI                                       |
 |--------------+-------------------------------------------|
 | GNU          | http://elpa.gnu.org/packages/             |
@@ -161,7 +161,7 @@ Or everything would break and you'd have to go back to the last commit, but hey.
 
 Here are the list of packages that /must/ be installed on /all/ Emacs instances I control, along with the apt-pinning preferences.
 
-#+NAME: package-settings 
+#+NAME: package-settings :colnames yes
 | name               | repository   |
 |--------------------+--------------|
 | color-theme        | MELPA        |
@@ -261,7 +261,7 @@ Really it's for *a e s t h e t i c* reasons, hahaha.
 
 Anyway, because it'd probably be easier for myself, I'll just use the table format and work on it that way, since it's an alist, right? No harm in that.
 
-#+NAME:prettify-table 
+#+NAME:prettify-table :colnames yes
 | token    | code |
 |----------+------|
 | "not"    |  172 |
@@ -395,7 +395,7 @@ Can't think of a reason why not. Why not?
 **** New =org-structure-template-alist=
 Obviously the way I would like to do it is to put in a table, as such:
 
-#+name:shortcuts-alist
+#+name:shortcuts-alist :colnames yes
 | key | value      |
 |-----+------------|
 | n   | #+NAME:?   |
@@ -408,7 +408,7 @@ Obviously the way I would like to do it is to put in a table, as such:
       (setq original org-structure-template-alist)
       (setq org-structure-template-alist (append original sequences)))))
 #+END_SRC
-
+x
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
 

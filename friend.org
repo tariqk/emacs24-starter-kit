@@ -1,7 +1,7 @@
 #+TITLE: Configuration Specific To Tariq's HP Pavilion Desktop.
 #+STARTUP: indent hidestars
 #+OPTIONS: toc:nil num:nil ^:nil
-#+PROPERTY: header-args :results silent :colnames yes
+#+PROPERTY: header-args :results silent
 
 So this is basically the configuration file for friend, the HP Pavilion Desktop running Debian Jessie, formally Crunchbang Waldorf. Dual-screen monitor setup.
 
@@ -39,7 +39,7 @@ But that's for what's common in all machines. These are the packages that need t
 
 And now, to do what we did in =tariqk-common=: add /these/ package-pinning options, and then install them if they don't exist:
 
-#+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1]
+#+begin_src emacs-lisp :var name=package-settings[,0] repository=package-settings[,1] :colnames yes
   (when (require 'package nil 'noerror)
     (when (require 'cl nil 'noerror)
       (lexical-let ((pkgs (mapcar #'intern name))
@@ -90,10 +90,8 @@ Since I'm using this computer to develop projects, here are some language-specif
 Some custom settings for this desktop computer, since I'm more likely to run code blocks here than on other computers (for now):
 
 #+name: languages-to-run-in-org
-| languages  |
-|------------|
-| sh         |
-| emacs-lisp |
+- sh
+- emacs-lisp
 
 Again, use the same old trick that we've used before:
 

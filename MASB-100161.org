@@ -1,7 +1,7 @@
 #+TITLE: Configuration Specific To Mesiniaga's Lenovo Thinkpad E420
 #+STARTUP: indent hidestars
 #+OPTIONS: toc:nil num:nil ^:nil
-#+PROPERTY: header-args :results silent :colnames yes
+#+PROPERTY: header-args :results silent
 
 So this is basically the configuration file for MASB-100161, my work laptop.
 
@@ -22,7 +22,7 @@ Now, the common-files should have done the following:
 
 But that's for what's common in all machines. These are the packages that need to be installed on friend desktop:
 
-#+NAME: package-settings 
+#+NAME: package-settings :colnames yes
 | name       | repository |
 |------------+------------|
 | everything | marmalade  |
