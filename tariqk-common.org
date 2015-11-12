@@ -167,8 +167,10 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 | color-theme        | MELPA        |
 | dired+             | MELPA        |
 | form-feed          | MELPA-stable |
+| htmlize            | MELPA        |
 | org-bullets        | MELPA-stable |
 | org-plus-contrib   | org          |
+| ox-reveal          | MELPA        |
 | powerline          | MELPA-stable |
 | rainbow-delimiters | MELPA-stable |
 | sx                 | MELPA-stable |
@@ -409,6 +411,16 @@ Obviously the way I would like to do it is to put in a table, as such:
       (setq org-structure-template-alist (append original sequences)))))
 #+END_SRC
 x
+**** Add org-presentation mode with =ox-reveal=, using reveal.js served via CDN
+So I'm going to use =ox-reveal=, but rather than install =reveal.js= locally by default, I'll use the [[http://cdn.jsdelivr.net/reveal.js/3.0.0/][reveal.js copy available on jsDelivr]], which means that while I may end up being dependent on a network, I'll at least not have to install anything additional.
+
+If necessary, I'll install =reveal.js= where needed, usually in the =#+REVEAL_ROOT= option, as shown [[https://github.com/yjwen/org-reveal#url-form-for-file-location][here]].
+
+#+BEGIN_SRC emacs-lisp
+  (when (require 'ox-reveal nil 'noerror)
+    (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
+#+END_SRC
+
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
 
