@@ -166,6 +166,8 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 |--------------------+--------------|
 | color-theme        | MELPA        |
 | dired+             | MELPA        |
+| dired-sort-menu    | MELPA        |
+| dired-sort-menu+   | MELPA        |
 | form-feed          | MELPA-stable |
 | htmlize            | MELPA        |
 | org-bullets        | MELPA-stable |
@@ -360,6 +362,14 @@ Thanks to recommendations from the esteemable [[http://pages.sachachua.com/.emac
       (global-unset-key (kbd "C-y")) ; Because it's tied to yank now, screw that.
       (global-set-key (kbd "C-y") 'redo)))
 #+end_src
+
+**** Activating dired-sort-menu mode
+Based on the documentation, load =dired-sort-menu= mode when dired loads.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'dired-load-hook
+            (lambda () (require 'dired-sort-menu)))
+#+END_SRC
 
 *** Changes to =org-mode=
 **** Custom org-faces & settings
