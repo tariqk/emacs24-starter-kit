@@ -1,6 +1,6 @@
 #+TITLE: Common Options for Emacs Starter Kit for Tariq Kamal (tariqk)
 #+OPTIONS: toc:nil num:nil ^:nil
-#+PROPERTY: header-args :results silent
+#+PROPERTY: header-args :results silent :colnames yes
 
 This is part of Tariq Kamal's common emacs configuration, with options that remain true no matter what device he's on.
 
