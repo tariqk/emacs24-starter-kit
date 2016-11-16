@@ -117,6 +117,6 @@ And once that's all done, just maximize the window, w32-style. And maybe load di
         '(progn
            (color-theme-initialize)
            (color-theme-dark-laptop))))
-  (dired "~/Documents/Projects")
+  (dired "~/Dropbox (STI)/Projects")
   (toggle-frame-maximized)
 #+end_src

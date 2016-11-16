@@ -132,7 +132,7 @@ How things work in the background.
 *** Package Management Locations
 Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extract lists from tables. With some jiggery-pokery based on [[http://stackoverflow.com/a/19775362][this StackOverflow answer]], you can have a list of repositories, like so:
 
-#+NAME: repository-names :colnames yes
+#+NAME: repository-names
 | label        | URI                                       |
 |--------------+-------------------------------------------|
 | GNU          | http://elpa.gnu.org/packages/             |
@@ -161,7 +161,7 @@ Or everything would break and you'd have to go back to the last commit, but hey.
 
 Here are the list of packages that /must/ be installed on /all/ Emacs instances I control, along with the apt-pinning preferences.
 
-#+NAME: package-settings :colnames yes
+#+NAME: package-settings
 | name               | repository   |
 |--------------------+--------------|
 | color-theme        | MELPA        |
@@ -173,6 +173,7 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 | org-bullets        | MELPA-stable |
 | org-plus-contrib   | org          |
 | ox-reveal          | MELPA        |
+| ox-twbs            | MELPA        |
 | powerline          | MELPA-stable |
 | rainbow-delimiters | MELPA-stable |
 | sx                 | MELPA-stable |
@@ -223,7 +224,7 @@ Takes up space only. What a waste, especially on the netbook.
 #+end_src
 
 **** Visual-line-mode
-xI can't /stand/ having to muck around with linewraps while I'm writing. It's fucking annoying. So, instead, I shall use visual-line-mode.
+I can't /stand/ having to muck around with linewraps while I'm writing. It's fucking annoying. So, instead, I shall use visual-line-mode.
 
 Of course, since this annoyance really only comes during writing, and not coding, we shall only put it on in text modes. Sounds fair? Hope so.
 
@@ -236,9 +237,11 @@ Of course, since this annoyance really only comes during writing, and not coding
 As defined here, these are the modes that are related to Emacs Lisp:
 
 #+name: emacs-lisp-related-modes
-- emacs-lisp-mode
-- ielm-mode
-- lisp-interaction-mode
+| mode                  |
+|-----------------------|
+| emacs-lisp-mode       |
+| ielm-mode             |
+| lisp-interaction-mode |
 
 This table is used in the following manner:
 
@@ -253,7 +256,7 @@ First, [[http://emacswiki.org/emacs/ElDoc][based on this suggestion]], highlight
 
 And then, activate =eldoc-mode=:
 
-#+begin_src emacs-lisp :var modes=emacs-lisp-related-modes
+#+begin_src emacs-lisp :var modes=emacs-lisp-related-modes[,0]
   (when (require 'cl nil 'noerror)
     (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) modes)))
       (dolist (hook hooks)
@@ -265,7 +268,7 @@ Really it's for *a e s t h e t i c* reasons, hahaha.
 
 Anyway, because it'd probably be easier for myself, I'll just use the table format and work on it that way, since it's an alist, right? No harm in that.
 
-#+NAME:prettify-table :colnames yes
+#+NAME:prettify-table
 | token    | code |
 |----------+------|
 | "not"    |  172 |
@@ -302,13 +305,15 @@ Too many parentheses and the like mess me up. Can't have that, hence, rainbow-de
 Here's a list of modes that need =rainbow-delimiters-mode=:
 
 #+name:modes-that-need-rainbow-delimiters
-- ielm-mode
-- org-mode
-- prog-mode
+| mode      |
+|-----------|
+| ielm-mode |
+| org-mode  |
+| prog-mode |
 
 Load =rainbow-delimiters-mode= for the above modes:
 
-#+begin_src emacs-lisp :var modes=modes-that-need-rainbow-delimiters
+#+begin_src emacs-lisp :var modes=modes-that-need-rainbow-delimiters[,0]
   (when (require 'rainbow-delimiters nil 'noerror)
     (when (require 'cl nil 'noerror)
       (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) modes)))
@@ -327,9 +332,11 @@ From the =powerline= [[https://github.com/milkypostman/powerline][github page]]:
 Here's a table of modes that need =form-feed-mode=.
 
 #+name:modes-needing-form-feed-mode
-- compilation-mode
-- emacs-lisp-mode
-- help-mode
+| mode             |
+|------------------|
+| compilation-mode |
+| emacs-lisp-mode  |
+| help-mode        |
 
 This puts together several tricks I've learned during working on this file:
 
@@ -341,7 +348,7 @@ This puts together several tricks I've learned during working on this file:
 
 I forsee that this will come very useful in the =prettify-symbols-mode= section.
 
-#+BEGIN_SRC emacs-lisp :var modes=modes-needing-form-feed-mode
+#+BEGIN_SRC emacs-lisp :var modes=modes-needing-form-feed-mode[,0]
   (when (require 'form-feed nil 'noerror)
     (when (require 'cl nil 'noerror)
       (lexical-let ((hooks (mapcar (lambda (arg) (intern (concat arg "-hook"))) modes)))
@@ -394,7 +401,8 @@ Everything involving the most common settings for org-mode, here in the common f
    '(org-log-done t)                        ; logdone
    '(org-pretty-entities t)                 ; entitiespretty
    '(org-startup-folded 'content)           ; #+STARTUP: content
-   '(org-export-with-sub-superscripts nil)) ; #+OPTIONS: ^:{}
+   '(org-export-with-sub-superscripts nil)  ; #+OPTIONS: ^:{}
+   '(org-export-backends (quote (ascii html md ox-twbs ox-reveal))))
 #+END_SRC
 
 **** Make =org-bullet= install & load, put it in org-mode
@@ -407,7 +415,7 @@ Can't think of a reason why not. Why not?
 **** New =org-structure-template-alist=
 Obviously the way I would like to do it is to put in a table, as such:
 
-#+name:shortcuts-alist :colnames yes
+#+name:shortcuts-alist
 | key | value      |
 |-----+------------|
 | n   | #+NAME:?   |
