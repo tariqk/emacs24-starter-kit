@@ -338,6 +338,7 @@ Here's a table of modes that need =form-feed-mode=.
 | compilation-mode |
 | emacs-lisp-mode  |
 | help-mode        |
+| special-mode     |
 
 This puts together several tricks I've learned during working on this file:
 
