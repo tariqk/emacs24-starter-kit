@@ -22,7 +22,7 @@ Now, the common-files should have done the following:
 
 But that's for what's common in all machines. These are the packages that need to be installed on friend desktop:
 
-#+NAME: package-settings :colnames yes
+#+NAME: package-settings
 | name       | repository |
 |------------+------------|
 | everything | marmalade  |
@@ -90,7 +90,7 @@ The original =es.exe= file location is hard-coded, and /egregiously/ wrong in th
 
 #+NAME: quirks-custom-variables-everything
 #+begin_src emacs-lisp
-  '(everything-cmd "C:\\Program Files \(x86\)\\Everything\\es.exe")
+  '(everything-cmd "C:\\Program Files\\Everything\\es.exe")
 #+end_src
 **** Allowing =magit= to work properly
 So, based on [[http://emacs.stackexchange.com/questions/177/magit-on-windows-searching-for-program-permission-denied-git][this solution]], we need to locate =git= manually for =magit= to work. Therefore:
