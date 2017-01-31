@@ -136,11 +136,11 @@ Hey, so here's a thing I /finally/ figured out; it turns out that you /can/ extr
 | label        | URI                                       |
 |--------------+-------------------------------------------|
 | GNU          | http://elpa.gnu.org/packages/             |
+| MELPA        | http://melpa.org/packages/                |
+| MELPA-stable | http://stable.melpa.org/packages/         |
 | elpy         | http://jorgenschaefer.github.io/packages/ |
 | marmalade    | http://marmalade-repo.org/packages/       |
-| MELPA        | http://melpa.org/packages/                |
 | org          | http://orgmode.org/elpa/                  |
-| MELPA-stable | http://stable.melpa.org/packages/         |
 | original     | http://tromey.com/elpa/                   |
 
 And then, using this, you can incorporate it, /sort of cleanly/, with this:
@@ -178,6 +178,7 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 | powerline          | MELPA-stable |
 | rainbow-delimiters | MELPA-stable |
 | sx                 | MELPA-stable |
+| tumblesocks        | marmalade    |
 | undo-tree          | MELPA        |
 | yasnippet          | MELPA-stable |
 
@@ -196,6 +197,13 @@ Rather than using their suggestion of manually using =package-install=, however,
         (package-initialize))))
 #+end_src
 
+*** Fixing the a common OAuth problem
+In order to resolve the issue for [[https://github.com/gcr/tumblesocks][tumblesocks]], we're going to include the following fix, based on [[https://github.com/gcr/tumblesocks#troubleshooting][this]]:
+#+BEGIN_SRC emacs-lisp
+  (setq oauth-nonce-function 'oauth-internal-make-nonce)
+#+END_SRC
+
+Still doesn't work, though. Am going through the devs using [[https://github.com/gcr/tumblesocks/issues/12][this issue ticket]].
 ** Interface
 Settings for Emacs user interfaces, which include appearances and custom keybindings.
 
@@ -440,7 +448,6 @@ If necessary, I'll install =reveal.js= where needed, usually in the =#+REVEAL_RO
   (when (require 'ox-reveal nil 'noerror)
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
 #+END_SRC
-
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
 
