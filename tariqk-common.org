@@ -171,6 +171,7 @@ Here are the list of packages that /must/ be installed on /all/ Emacs instances 
 | form-feed          | MELPA-stable |
 | htmlize            | MELPA        |
 | org-bullets        | MELPA-stable |
+| org-page           | MELPA        |
 | org-plus-contrib   | org          |
 | ox-reveal          | MELPA        |
 | ox-twbs            | MELPA        |
