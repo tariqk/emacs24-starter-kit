@@ -390,6 +390,33 @@ Based on the documentation, load =dired-sort-menu= mode when dired loads.
 #+END_SRC
 
 *** Changes to =org-mode=
+**** Set up agenda files and capture files
+There are two things that need to be done here: set up =org-capture= and =org-agenda= files that reflect both work and personal contexts. 
+
+***** Link to all work =.org= files.
+Right now, all work =.org= files are scattered, but under a folder backed up by company cloud storage (presumably, if and when I move, they'll be placed in an archive file for easy access), and likely on work-specific machines. Doesn't matter for now; once I have regular non-work machines, we'll transfer this section out.
+
+A major issue right now is that every time the files are reloaded, the search time is /interminable/. There is a [[http://stackoverflow.com/a/17232509/800892][solution]] for this problem, but it requires more thinking than I'm able to do right now, and, also, will write an external file that I don't think I want to be synchronised, so I need to figure out where to keep it.
+
+#+BEGIN_SRC emacs-lisp
+  (if (file-exists-p "~/Dropbox (STI)/")
+      (progn
+        (load-library "find-lisp")
+        (setq org-agenda-files (find-lisp-find-files "~/Dropbox (STI)/" "\.org$"))))
+#+END_SRC
+
+***** Link to all personal =.org= files.
+Personal =.org= files are to be kept synchronised with another service. 
+
+What ought to be done, honestly is to set up =org-capture= to quickly capture tasks and activities for both work and personal contexts, which need to be kept separately. But this will work as a first pass.
+
+#+BEGIN_SRC emacs-lisp
+  (if (file-exists-p "~/org/")
+      (progn
+        (setq org-default-notes-file (concat org-directory "/scrapbook.org"))
+        (add-to-list 'org-agenda-files (concat org-directory "/agendas"))))
+#+END_SRC
+
 **** Custom org-faces & settings
 ***** Mucking about with faces
 Some tweaks that don't involve color, just size, for org-mode. Also, enable syntax highlighting for blocks in org-mode. Tried that whole "colorize the =begin_src= =end_src= shit, didn't like it. Gave me eyestrain.
@@ -439,7 +466,7 @@ Obviously the way I would like to do it is to put in a table, as such:
       (setq original org-structure-template-alist)
       (setq org-structure-template-alist (append original sequences)))))
 #+END_SRC
-x
+
 **** Add org-presentation mode with =ox-reveal=, using reveal.js served via CDN
 So I'm going to use =ox-reveal=, but rather than install =reveal.js= locally by default, I'll use the [[http://cdn.jsdelivr.net/reveal.js/3.0.0/][reveal.js copy available on jsDelivr]], which means that while I may end up being dependent on a network, I'll at least not have to install anything additional.
 
