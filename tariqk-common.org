@@ -391,30 +391,22 @@ Based on the documentation, load =dired-sort-menu= mode when dired loads.
 
 *** Changes to =org-mode=
 **** Set up agenda files and capture files
-There are two things that need to be done here: set up =org-capture= and =org-agenda= files that reflect both work and personal contexts. 
-
-***** Link to all work =.org= files.
-Right now, all work =.org= files are scattered, but under a folder backed up by company cloud storage (presumably, if and when I move, they'll be placed in an archive file for easy access), and likely on work-specific machines. Doesn't matter for now; once I have regular non-work machines, we'll transfer this section out.
-
-A major issue right now is that every time the files are reloaded, the search time is /interminable/. There is a [[http://stackoverflow.com/a/17232509/800892][solution]] for this problem, but it requires more thinking than I'm able to do right now, and, also, will write an external file that I don't think I want to be synchronised, so I need to figure out where to keep it.
-
-#+BEGIN_SRC emacs-lisp
-  (if (file-exists-p "~/Dropbox (STI)/")
-      (progn
-        (load-library "find-lisp")
-        (setq org-agenda-files (find-lisp-find-files "~/Dropbox (STI)/" "\.org$"))))
-#+END_SRC
-
+There are two things that need to be done here: set up =org-capture= and =org-agenda= files.
 ***** Link to all personal =.org= files.
 Personal =.org= files are to be kept synchronised with another service. 
 
-What ought to be done, honestly is to set up =org-capture= to quickly capture tasks and activities for both work and personal contexts, which need to be kept separately. But this will work as a first pass.
-
+What's been done, honestly is to set up =org-capture= to quickly capture tasks and activities for both work and personal contexts, which need to be kept separately. But this will work as a first pass.
 #+BEGIN_SRC emacs-lisp
   (if (file-exists-p "~/org/")
       (progn
         (setq org-default-notes-file (concat org-directory "/scrapbook.org"))
-        (add-to-list 'org-agenda-files (concat org-directory "/agendas"))))
+        (add-to-list 'org-agenda-files (concat org-directory "/agendas"))
+        (setq org-capture-templates
+              '(("w" "Work" entry (file+datetree (concat org-directory "/agendas/@work.org"))
+                 "* TODO %T %? \n  %i\  %a")
+                ("p" "Personal" entry (file+datetree (concat org-directory "/agendas/personal.org"))
+                 "* TODO %T %? \n %i \ %a")))
+        (define-key global-map "\C-cc" 'org-capture)))
 #+END_SRC
 
 **** Custom org-faces & settings
