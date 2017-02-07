@@ -5,7 +5,7 @@
 
 So this is basically the configuration file for my work machines, which are Windows laptops.
 
-It's getting on with age, it has a whole bunch of weird Windows hacks to make it work properly, and I don't ultimately own it.
+It's pretty spiffy and new, it has a whole bunch of weird Windows hacks to make it work properly, and I don't ultimately own it.
 
 * Before we begin
 Anyway, as with all hostname-specific machines, this little fella runs the following code to load the common features I expect from all my emacs instances:
@@ -60,6 +60,50 @@ There is obviously no DejaVu Mono Sans installed in Windows by default, so we us
 
 ** Custom variables
 Instead of using the =customize= option to fix stuff (which saves it in =customize.el= and doesn't get propagated to the github repo, I save them here.
+
+*** Local Setup
+***** Link to all work =.org= files.
+Right now, all work =.org= files are scattered, but under a folder backed up by company cloud storage (presumably, if and when I move, they'll be placed in an archive file for easy access), and likely on work-specific machines.
+
+A major issue right now is that every time the files are reloaded, the search time is /interminable/. There is a [[http://stackoverflow.com/a/17232509/800892][solution]] for this problem, but it requires more thinking than I'm able to do right now, and, also, will write an external file.
+#+BEGIN_SRC emacs-lisp
+  (load-library "find-lisp")
+  (setq org-agenda-files (append org-agenda-files (find-lisp-find-files "~/Dropbox (STI)/" "\.org$")))
+#+END_SRC
+***** Ibuffer Settings
+As a consequence of loading /all/ those org files, Emacs now has several hundred buffer loaded at the same time LMAO.
+
+But guess what? It turns out that Ibuffer does a /great/ job at grouping these buffers, but it's just poorly documented. But [[http://martinowen.net/blog/2010/02/03/tips-for-emacs-ibuffer.html][there's a blog post for it]]!
+
+Here are some of thqe local buffer settings:
+#+BEGIN_SRC emacs-lisp
+  (setq ibuffer-saved-filter-groups
+        '(("work laptop"
+           ("Work Org Files" (filename . "Dropbox (STI)/.+\.org$"))
+           ("Personal Org Files" (filename . "private-org-files/agendas/.+\.org$"))
+           ("File Folders" (mode . dired-mode))
+           ("Emacs" (or (name . "\*scratch\*")
+                        (name . "\*Messages\*")))
+           ("Help" (or (name . "\*Help\*")
+                       (name . "\*Apropos\*")
+                       (name . "\*Info\*")))
+           ("Magit" (name . "\*magit")))))
+
+  (add-hook 'ibuffer-mode-hook
+            '(lambda ()
+               (ibuffer-switch-to-saved-filter-groups "work laptop")))
+#+END_SRC
+
+Also, here are some other miscellaneous options for Ibuffer that will help things out:
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'ibuffer-mode-hook
+            '(lambda ()
+               (ibuffer-auto-mode t)))
+  (setq ibuffer-expert t)
+  (setq ibuffer-show-empty-filter-groups nil)
+#+END_SRC
+
 
 *** Quirks-fixing
 Of course, there are a whole bunch of little quirks that emacs for w32 has. When I find one, I fix it here.
