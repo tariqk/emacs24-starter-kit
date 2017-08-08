@@ -468,6 +468,14 @@ If necessary, I'll install =reveal.js= where needed, usually in the =#+REVEAL_RO
   (when (require 'ox-reveal nil 'noerror)
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
 #+END_SRC
+**** Make LaTeX fragments bigger in org-mode
+When you use =C-u C-u C-c C-x C-l=, normally the fragment size is to small to read.
+
+Initially it was based on [[http://tex.stackexchange.com/questions/78501/change-size-of-the-inline-image-for-latex-fragment-in-emacs-org-mode][this]] response, +but then I realized, after several attempts, and based on commentary [[https://lists.gnu.org/archive/html/emacs-orgmode/2013-09/msg00768.html][here]], that just use =customize-variable= and take the resulting value, what's the issue?+ LOL NEVERMIND THE FIRST LINK WORKS, I FORGOT THAT IT'S =#+BEGIN_SRC emacs-lisp=, NOT =#+BEGIN_SRC elisp=, I'M A DODO:
+
+#+BEGIN_SRC emacs-lisp
+  (plist-put org-format-latex-options :scale 1.5)
+#+END_SRC
 ** Activating custom =starter-kit= modules.
 I can't believe I never included this in the first place. In any case, activating the =starter-kit= modules that will be used by /all/ variants of Emacs that I use.
 

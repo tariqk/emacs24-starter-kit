@@ -25,6 +25,7 @@ elpa/*
 src/*
 themes/*
 url/*
+quelpa/*
 
 ## exported and encrypted files
 *gpg
@@ -77,3 +78,5 @@ server/*
 #MASB-100161.org#
 /#tariqk-common.org#
 /async-bytecomp.log
+/bookmarks
+
