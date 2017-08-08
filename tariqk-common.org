@@ -458,9 +458,10 @@ Obviously the way I would like to do it is to put in a table, as such:
       (setq original org-structure-template-alist)
       (setq org-structure-template-alist (append original sequences)))))
 #+END_SRC
-
-**** Add org-presentation mode with =ox-reveal=, using reveal.js served via CDN
-So I'm going to use =ox-reveal=, but rather than install =reveal.js= locally by default, I'll use the [[http://cdn.jsdelivr.net/reveal.js/3.0.0/][reveal.js copy available on jsDelivr]], which means that while I may end up being dependent on a network, I'll at least not have to install anything additional.
+**** Changes to =org-reveal=
+Since I've found new use to =org-reveal=, here are the multiple changes that I've incorporated into that package:
+***** Add org-presentation mode with =ox-reveal=, using reveal.js served via CDN
+So, rather than install =reveal.js= locally by default, I'll use the [[http://cdn.jsdelivr.net/reveal.js/3.0.0/][reveal.js copy available on jsDelivr]], which means that while I may end up being dependent on a network, I'll at least not have to install anything additional.
 
 If necessary, I'll install =reveal.js= where needed, usually in the =#+REVEAL_ROOT= option, as shown [[https://github.com/yjwen/org-reveal#url-form-for-file-location][here]].
 
@@ -468,6 +469,22 @@ If necessary, I'll install =reveal.js= where needed, usually in the =#+REVEAL_RO
   (when (require 'ox-reveal nil 'noerror)
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"))
 #+END_SRC
+
+***** Customize the title slide for =org-reveal=
+I've found that, rather than the default =org-reveal= title slide, which is ugly as heck, that this particular HTML document does pretty well:
+
+#+NAME: org-reveal-title-template
+#+BEGIN_SRC html
+  <h1>%t</h1><h2>%a<br /><small>(%e)</small></h2><p>Use arrow keys to navigate. <br /><code>ESC</code> loads overview of slides.</p>
+#+END_SRC
+
+This is incorporated into the =org-reveal-title-slide=, as follows:
+
+#+BEGIN_SRC emacs-lisp :noweb yes
+  (when (require 'ox-reveal nil 'noerror)
+    (setq org-reveal-title-slide "<<org-reveal-title-template>>"))
+#+END_SRC
+
 **** Make LaTeX fragments bigger in org-mode
 When you use =C-u C-u C-c C-x C-l=, normally the fragment size is to small to read.
 
